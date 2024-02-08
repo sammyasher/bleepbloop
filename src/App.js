@@ -1,20 +1,36 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { SmokeySparkler } from "./pages/SmokeySparkler";
-import { SmokeySparkler_cone } from "./pages/SmokeySparkler_cone";
+import { SmokeySparklerCone } from "./pages/SmokeySparklerCone";
 import { NoteMaker } from "./pages/NoteMaker";
 
+const paths = [
+  { to: "/", element: <Home /> },
+  { to: "/smokeysparkler", element: <SmokeySparkler /> },
+  { to: "/smokeysparkler-cone", element: <SmokeySparklerCone /> },
+  { to: "/notemaker", element: <NoteMaker /> },
+];
+
 const App = () => {
+  const navLinks = paths.map((link) => (
+    <li key={link.to}>
+      <Link style={{ color: "brown" }} to={link.to}>
+        {link.element.type.name}
+      </Link>
+    </li>
+  ));
+
+  const routes = paths.map((link) => (
+    <Route key={link.to} path={link.to} element={link.element} />
+  ));
+
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/smokeysparkler" element={<SmokeySparkler />} />
-        <Route path="/smokeysparkler_cone" element={<SmokeySparkler_cone />} />
-        <Route path="/notemaker" element={<NoteMaker />} /> 
-      </Routes>
+      {navLinks}
+
+      <Routes>{routes}</Routes>
     </BrowserRouter>
   );
 };
