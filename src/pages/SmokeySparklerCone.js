@@ -31,7 +31,7 @@ class Example extends Phaser.Scene {
       lifespan: 4400,
 
       scale: { start: 0.2, end: 0.8 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "OVERLAY", //all the blend modes in list are here ill write them like this 
+      //blendMode: "OVERLAY", //all the blend modes in list are here ill write them like this
       angle: { min: -120, max: -360 },
       // delay: 1000,
       gravityX: 200,
@@ -196,7 +196,7 @@ class Example extends Phaser.Scene {
   }
 }
 
-export const SmokeySparkler_cone = () => {
+export const SmokeySparklerCone = () => {
   //config
   const config = {
     type: Phaser.AUTO,
