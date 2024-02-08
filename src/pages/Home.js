@@ -26,12 +26,12 @@ class Example extends Phaser.Scene {
     const particles = this.add.particles(0, 0, "blue", {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 
-      speed: 500, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
-      frequency: 100,
+      speed: 400, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      frequency: 3,
       lifespan: 1400,
 
-      scale: { start: 0.1, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      blendMode: "ADD",
+      scale: { start: .4, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
+      //blendMode: "ADD",
       // angle: { min: 0, max: 360 },
       // delay: 1000,
       // gravityX: 1000,
