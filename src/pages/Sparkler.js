@@ -46,10 +46,33 @@ class Example extends Phaser.Scene {
       // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
       //onParticleEmit:
     });
+    const smokeEnd = this.add.particles(0, 0, "smoke", {
+      //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
+
+      speed: 0, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      frequency: 100,
+      lifespan: 4400,
+
+      scale: { start: 0.2, end: 0.8 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
+      //blendMode: "ADD",
+      // angle: { min: -120, max: -60 },
+      // delay: 1000,
+      gravityX: 100,
+      gravityY: -200,
+      //moveToX: 100,  //activate both these to have particles sink into a specific point
+      //moveToY: 100,  //activate both these to have particles sink into a specific point
+      //maybe have first touch emit particles, second touch sink them into it
+
+      follow: this.input.activePointer,
+      emitting: false,
+
+      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
+      //onParticleEmit:
+    });
     const ember = this.add.particles(0, 0, "yellow", {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 
-      speed: 100, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      speed: 200, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
       frequency: 15,
       lifespan: 100,
 
@@ -181,8 +204,14 @@ class Example extends Phaser.Scene {
 
     this.input.on("pointerup", () => {
       smoke.emitting = false;
-      smoke.explode(1, this.input.activePointer.x, this.input.activePointer.y);
+      // smoke.explode(1, this.input.activePointer.x, this.input.activePointer.y);
       smoke.stopFollow();
+      smokeEnd.explode(
+        1,
+        this.input.activePointer.x,
+        this.input.activePointer.y
+      );
+      smokeEnd.startFollow(this.input.activePointer);
       ember.emitting = false;
       ember.stopFollow();
       downSpark.emitting = false;
