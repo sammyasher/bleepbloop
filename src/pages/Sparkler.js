@@ -53,7 +53,7 @@ class Example extends Phaser.Scene {
       frequency: 100,
       lifespan: 4400,
 
-      scale: { start: 0.2, end: 0.8 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
+      scale: { start: 0.1, end: 2 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
       //blendMode: "ADD",
       // angle: { min: -120, max: -60 },
       // delay: 1000,
@@ -72,11 +72,11 @@ class Example extends Phaser.Scene {
     const ember = this.add.particles(0, 0, "yellow", {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 
-      speed: 200, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
-      frequency: 15,
-      lifespan: 100,
+      speed: 400, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      frequency: 12,
+      lifespan: 200,
 
-      scale: { start: 0.5, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
+      scale: { start: 0.8, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
       //blendMode: "ADD",
       // angle: { min: -120, max: -60 },
       // delay: 1000,
@@ -99,7 +99,7 @@ class Example extends Phaser.Scene {
       frequency: 1700,
       lifespan: 450,
 
-      scale: { start: 0.2, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
+      scale: { start: 0.8, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
       //blendMode: "ADD",
       angle: { min: 40, max: 140 },
       // delay: 1000,
@@ -120,10 +120,10 @@ class Example extends Phaser.Scene {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 
       speed: 400, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
-      frequency: 2650,
+      frequency: 3000,
       lifespan: 800,
 
-      scale: { start: 0.2, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
+      scale: { start: 0.8, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
       //blendMode: "ADD",
       angle: { min: 30, max: 150 },
       // delay: 1000,
@@ -143,10 +143,10 @@ class Example extends Phaser.Scene {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 
       speed: 1600, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
-      frequency: 700,
-      lifespan: 50,
+      frequency: 1100,
+      lifespan: 70,
 
-      scale: { start: 0.2, end: 0.8 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
+      scale: { start: 0.8, end: 2 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
       //blendMode: "ADD",
       // angle: { min: 20, max: 60 },
       // delay: 1000,
