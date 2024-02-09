@@ -27,12 +27,12 @@ class Example extends Phaser.Scene {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 
       speed: 120, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
-      frequency: 2,
+      frequency: 100,
       lifespan: 4400,
 
       scale: { start: 0.2, end: 0.8 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
       //blendMode: "ADD",
-      angle: { min: -120, max: -60 },
+      // angle: { min: -120, max: -60 },
       // delay: 1000,
       gravityX: 200,
       // gravityY: 1000
@@ -176,27 +176,33 @@ class Example extends Phaser.Scene {
       spark2.startFollow(this.input.activePointer);
       spark3.emitting = true;
       spark3.startFollow(this.input.activePointer);
+      //how to change to another texture?
     });
 
     this.input.on("pointerup", () => {
       smoke.emitting = false;
+      smoke.explode(1, this.input.activePointer.x, this.input.activePointer.y);
       smoke.stopFollow();
       ember.emitting = false;
       ember.stopFollow();
       downSpark.emitting = false;
       downSpark.stopFollow();
       downSpark2.emitting = false;
+      downSpark.explode(
+        1,
+        this.input.activePointer.x,
+        this.input.activePointer.y
+      );
       downSpark2.stopFollow();
       spark2.emitting = false;
       spark2.stopFollow();
       spark3.emitting = false;
       spark3.stopFollow();
-      //smoke.explode(10, pointer.x, pointer.y);
     });
   }
 }
 
-export const SmokeySparkler = () => {
+export const Sparkler = () => {
   //config
   const config = {
     type: Phaser.AUTO,
