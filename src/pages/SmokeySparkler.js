@@ -81,7 +81,7 @@ class Example extends Phaser.Scene {
       angle: { min: 40, max: 140 },
       // delay: 1000,
       // gravityX: 200,
-      gravityY: 0,
+      gravityY: 800,
 
       //moveToX: 100,  //activate both these to have particles sink into a specific point
       //moveToY: 100,  //activate both these to have particles sink into a specific point
@@ -104,8 +104,8 @@ class Example extends Phaser.Scene {
       //blendMode: "ADD",
       angle: { min: 30, max: 150 },
       // delay: 1000,
-      // gravityX: 200,
-      gravityY: 5,
+      gravityX: 150,
+      gravityY: 1000,
       // moveToX: 0, //activate both these to have particles sink into a specific point
       // moveToY: 0, //activate both these to have particles sink into a specific point
       //maybe have first touch emit particles, second touch sink them into it
@@ -164,8 +164,8 @@ class Example extends Phaser.Scene {
     });
 
     this.input.on("pointerdown", () => {
-      smoke.emitting = true;
-      smoke.startFollow(this.input.activePointer);
+      // smoke.emitting = true;
+      // smoke.startFollow(this.input.activePointer);
       ember.emitting = true;
       ember.startFollow(this.input.activePointer);
       downSpark.emitting = true;
