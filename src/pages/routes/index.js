@@ -2,6 +2,7 @@ import { Home } from "../Home";
 import { Sparkler } from "../Sparkler";
 import { SmokeySparklerCone } from "../SmokeySparklerCone";
 import { NoteMaker } from "../NoteMaker";
+import { Samoji } from "../Samoji";
 import { Link, Route } from "react-router-dom";
 
 const paths = [
@@ -13,6 +14,7 @@ const paths = [
     includeInNav: true,
   },
   { to: "/notemaker", element: <NoteMaker />, includeInNav: true },
+  { to: "/samoji", element: <Samoji />, includeInNav: true },
 ];
 
 const navLinks = paths
