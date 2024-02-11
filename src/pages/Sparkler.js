@@ -239,6 +239,10 @@ export const Sparkler = () => {
     width: 800,
     height: 600,
     scene: Example,
+    scale: {
+      mode: Phaser.Scale.RESIZE,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
     physics: {
       default: "arcade",
       arcade: {
