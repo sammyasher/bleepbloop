@@ -3,9 +3,9 @@ import { Sparkler } from "../Sparkler";
 import { SmokeySparklerCone } from "../SmokeySparklerCone";
 import { NoteMaker } from "../NoteMaker";
 import { Samoji } from "../Samoji";
-import {SourceAndSink} from "../SourceAndSink";
+import { SourceAndSink } from "../SourceAndSink";
 import { Link, Route } from "react-router-dom";
-
+import { MultiFireWork } from "../MultiFireWork";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true },
@@ -18,6 +18,7 @@ const paths = [
   { to: "/notemaker", element: <NoteMaker />, includeInNav: true },
   { to: "/samoji", element: <Samoji />, includeInNav: true },
   { to: "/sourceandsink", element: <SourceAndSink />, includeInNav: true },
+  { to: "/multifirework", element: <MultiFireWork />, includeInNav: true },
 ];
 
 const navLinks = paths
