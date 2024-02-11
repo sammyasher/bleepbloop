@@ -44,24 +44,13 @@ class Example extends Phaser.Scene {
     // Shuffle the array
     var shuffledSamojiKeys = Chance().shuffle(samojiKeys);
 
-
     const particles = this.add.particles(0, 0, "SamWow", {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 
-      speed: 100, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
-      frequency: 1,// (circles/shapes painting) // 
+      speed: 100,  
+      frequency: 1, 
       lifespan: 1600,
-      scale: { start: .2, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      
-        
-      //blendMode: "ADD",
-      // angle: { min: 0, max: 360 },
-      // delay: 1000,
-      // gravityX: 1000,
-      // gravityY: 5000,
-      //moveToX: 100,  //activate both these to have particles sink into a specific point
-      //moveToY: 100,  //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
+      scale: { start: .17, end: 0 },  
 
       follow: this.input.activePointer,
       emitting: false,
