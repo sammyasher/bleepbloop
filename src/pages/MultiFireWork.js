@@ -24,6 +24,8 @@ class Example extends Phaser.Scene {
   }
 
   create() {
+    const colors = ["red", "yellow", "green", "blue"];
+
     const groundToAir = this.add.particles(0, 0, "blue", {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
 

@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f855e6bc.css",
+    "main.js": "/static/js/main.6d767dbc.js",
+    "static/media/blackhole.png": "/static/media/blackhole.bbdf6b32564649f7a9e4.png",
+    "static/media/SamThinking.png": "/static/media/SamThinking.b0f04959305542cdff51.png",
+    "static/media/SamOne.png": "/static/media/SamOne.b8fe7c855384c71f031a.png",
+    "static/media/SamAnguish.png": "/static/media/SamAnguish.8d376edfd260fc65fa6f.png",
+    "static/media/SamAscended.png": "/static/media/SamAscended.8d31211fda3ad7b5d21c.png",
+    "static/media/SamOoh.png": "/static/media/SamOoh.084c6154ec51fad242ff.png",
+    "static/media/SamWow.png": "/static/media/SamWow.0b3e121981926454a7f4.png",
+    "static/media/SamFurious.png": "/static/media/SamFurious.2ed965911fb183853b92.png",
+    "static/media/red.circular.png": "/static/media/red.circular.d4cea8d6124db812dd46.png",
+    "static/media/yellow.circular.png": "/static/media/yellow.circular.c6699a74a8758dec3660.png",
+    "index.html": "/index.html",
+    "main.f855e6bc.css.map": "/static/css/main.f855e6bc.css.map",
+    "main.6d767dbc.js.map": "/static/js/main.6d767dbc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.6d767dbc.js"
+  ]
+}
