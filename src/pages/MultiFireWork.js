@@ -50,6 +50,7 @@ class Example extends Phaser.Scene {
 
     this.input.on("pointerdown", () => {
       groundToAir.emitting = true;
+      groundToAir.startFollow(this.input.activePointer);
     });
 
     this.input.on("pointerup", () => {
