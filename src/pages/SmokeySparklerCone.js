@@ -1,10 +1,10 @@
 import React from "react";
 import Phaser from "phaser";
-import * as Tone from "tone";
+//import * as Tone from "tone";
 import { GameComponent } from "../components/GameComponent";
 
 //create a tone synth granulizer so i can turn it on and adjust parameters/grains to match particles. the code is:
-const synth = new Tone.Synth().toDestination();
+//const synth = new Tone.Synth().toDestination();
 
 class Example extends Phaser.Scene {
   preload() {
