@@ -4,35 +4,38 @@ import { SmokeySparklerCone } from "../SmokeySparklerCone";
 import { NoteMaker } from "../NoteMaker";
 import { Samoji } from "../Samoji";
 import { SourceAndSink } from "../SourceAndSink";
-import { Link, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { MultiFireWork } from "../MultiFireWork";
+import { CircleBounceTone } from "../CircleBounceTone";
+import { useNavigate } from "react-router-dom";  
 
 const paths = [
-  { to: "/", element: <Home />, includeInNav: true },
-  { to: "/sparkler", element: <Sparkler />, includeInNav: true },
-  {
-    to: "/smokeysparkler-cone",
-    element: <SmokeySparklerCone />,
-    includeInNav: true,
-  },
-  { to: "/notemaker", element: <NoteMaker />, includeInNav: true },
-  { to: "/samoji", element: <Samoji />, includeInNav: true },
-  { to: "/sourceandsink", element: <SourceAndSink />, includeInNav: true },
-  { to: "/multifirework", element: <MultiFireWork />, includeInNav: true },
+  { to: "/", element: <Home />, includeInNav: true, name: "Home"},
+  { to: "/sparkler", element: <Sparkler />, includeInNav: true, name: "Sparkler"},
+  { to: "/smokeysparkler-cone", element: <SmokeySparklerCone />, includeInNav: true, name: "SmokeySparklerCone"},
+  { to: "/notemaker", element: <NoteMaker />, includeInNav: true, name: "NoteMaker"},
+  { to: "/samoji", element: <Samoji />, includeInNav: true, name: "Samoji"},
+  { to: "/sourceandsink", element: <SourceAndSink />, includeInNav: true, name: "SourceAndSink"},
+  { to: "/multifirework", element: <MultiFireWork />, includeInNav: true, name: "MultiFireWork"},
+  { to: "/circlebouncetone", element: <CircleBounceTone />, includeInNav: false, name: "CircleBounceTone"},
 ];
 
-const navLinks = paths
-  .filter((link) => link.includeInNav)
-  .map((link) => (
-    <li key={link.to}>
-      <Link style={{ color: "brown" }} to={link.to} includeInNav={link.element}>
-        {link.element.type.name}
-      </Link>
-    </li>
-  ));
+const Dropdown = () => {
+  const navigate = useNavigate(); 
 
-const routes = paths.map((link) => (
-  <Route key={link.to} path={link.to} element={link.element} />
+  return (
+    <select onChange={(event) => {navigate(event.target.value)}}>   
+      {paths.filter((path) => path.includeInNav).map((path) => (
+          <option value={path.to}>{path.name}</option> 
+        ))}
+    </select>
+  );
+};
+
+const navLinks = <Dropdown />;
+
+const routes = paths.map((path) => (
+  <Route path={path.to} element={path.element} />  
 ));
 
 export { paths, navLinks, routes };
