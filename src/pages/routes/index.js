@@ -7,6 +7,7 @@ import { SourceAndSink } from "../SourceAndSink";
 import { Route } from "react-router-dom";
 import { MultiFireWork } from "../MultiFireWork";
 import { CircleBounceTone } from "../CircleBounceTone";
+import { BeanBoy } from "../BeanBoy";
 import { useNavigate } from "react-router-dom";  
 
 const paths = [
@@ -18,6 +19,8 @@ const paths = [
   { to: "/sourceandsink", element: <SourceAndSink />, includeInNav: true, name: "SourceAndSink"},
   { to: "/multifirework", element: <MultiFireWork />, includeInNav: true, name: "MultiFireWork"},
   { to: "/circlebouncetone", element: <CircleBounceTone />, includeInNav: false, name: "CircleBounceTone"},
+  { to: "/beanboy", element: <BeanBoy />, includeInNav: true, name: "BeanBoy"}
+
 ];
 
 const Dropdown = () => {
