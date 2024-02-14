@@ -1,6 +1,5 @@
 import React from "react";
 import Phaser, { Create } from "phaser";
-//import * as Tone from "tone";
 import { GameComponent } from "../components/GameComponent";
 import Bean1 from "../assets/BeanBoy/Bean1.png";
 import Bean2 from "../assets/BeanBoy/Bean2.png";
@@ -15,17 +14,30 @@ import Crunchy from "../assets/BeanBoy/Crunchy.png";
 import Drips from "../assets/BeanBoy/Drips.png";
 import Faucet from "../assets/BeanBoy/Faucet.png";
 import Forrest1 from "../assets/BeanBoy/Forrest1.png";
-import Forrest2 from "../assets/BeanBoy/Forrest2.png";
+import ForrestCouch from "../assets/BeanBoy/ForrestCouch.png";
+import WaterDrop from "../assets/BeanBoy/Sounds/WaterDrop.mp3";
+import BeanSound1 from "../assets/BeanBoy/Sounds/bean.1.mp3";
+import BeanSound2 from "../assets/BeanBoy/Sounds/bean.2.mp3";
+import Crunch from "../assets/BeanBoy/Sounds/Crunch.mp3";
 
-//once all crunchies are collected, Forrest pops out and if you click her, bean screams and crunches are released, rinse repeat
 
+class StartScene extends Phaser.Scene {
+    create() {
+        let startButton = this.add.text(this.scale.width / 2, this.scale.height / 2, 'Start', { 
+            font: '64px Arial', 
+            fill: '#ffffff' 
+        }).setInteractive().setOrigin(0.5);
 
-//const synth = new Tone.Synth().toDestination();
-//const notes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4"];
+        startButton.on('pointerdown', () => {
+            this.scene.start('Example');
+        });
+    }
+}
+
 
 class Example extends Phaser.Scene {
     constructor() {
-        super();
+        super('Example');
         this.dripCount = 10;
         this.drips = null;
         this.faucet = null;
@@ -46,7 +58,12 @@ class Example extends Phaser.Scene {
         this.load.image("Drips", Drips);
         this.load.image("Faucet", Faucet);
         this.load.image("Forrest1", Forrest1);
-        this.load.image("Forrest2", Forrest2);
+        this.load.image("ForrestCouch", ForrestCouch);
+
+        this.load.audio("WaterDrop", WaterDrop);
+        this.load.audio("BeanSound1", BeanSound1);
+        this.load.audio("BeanSound2", BeanSound2);
+        this.load.audio("Crunch", Crunch);
 
     }
     DestroyDrips = () => {
@@ -62,6 +79,7 @@ class Example extends Phaser.Scene {
     
     create() {
 
+        
         this.heartsEmitter = this.add.particles(0, 0, "Heart", {
             //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
             speed: 100,
@@ -122,11 +140,11 @@ class Example extends Phaser.Scene {
 
         //create Forrest
         const Forrest1 = () => {
-            this.forrest1 = this.physics.add.sprite(this.scale.width * .2, this.scale.height + 100, "Forrest1").setScale(.8);
+            this.forrest1 = this.physics.add.sprite(this.scale.width * .9, this.scale.height + 50, "Forrest1").setScale(.8);
             // popup from bottom right tween and stay there
             this.tweens.add({
                 targets: this.forrest1,
-                x: this.scale.width * .4,
+                x: this.scale.width * .8,
                 y: this.scale.height - 100,
                 ease: "Power1",  
                 duration: 3000,
@@ -138,7 +156,7 @@ class Example extends Phaser.Scene {
         Forrest1();
 
         const Forrest2 = () => {
-            this.forrest2 = this.physics.add.sprite(this.scale.width +100, this.scale.height / 2, "Forrest2").setScale(.5);
+            this.forrest2 = this.physics.add.sprite(this.scale.width +100, this.scale.height / 2, "ForrestCouch").setScale(.5);
             // popup from bottom right tween and stay there
             this.tweens.add({
                 targets: this.forrest2,
@@ -164,7 +182,8 @@ class Example extends Phaser.Scene {
 
         this.input.on("pointerdown", (pointer) => {
             const randomBean = Phaser.Math.RND.pick(BeanBoys);
-            this.bean = this.physics.add.sprite(pointer.x, pointer.y, randomBean).setScale(0.5);
+            this.bean = this.physics.add.sprite(pointer.x, pointer.y - 80, randomBean).setScale(0.5);
+
 
             
 
@@ -172,13 +191,15 @@ class Example extends Phaser.Scene {
 
         this.input.on("pointermove", (pointer) => {
             if (this.bean) {
-                this.bean.setPosition(pointer.x, pointer.y);
+                this.bean.setPosition(pointer.x, pointer.y - 80);
                 this.physics.add.overlap(this.bean, this.forrest1, () => {
+                    this.sound.play("BeanSound1");
                     this.forrest1.destroy();    
                     CreateFaucetAndDrips();
                 });
     
                 this.physics.add.overlap(this.bean, this.drips, (bean, drip) => {
+                    this.sound.play("WaterDrop");
                     drip.destroy();
                     this.heartsEmitter.explode(1, drip.x, drip.y);
                     this.dripCount--;
@@ -189,11 +210,13 @@ class Example extends Phaser.Scene {
                 });
     
                 this.physics.add.overlap(this.bean, this.forrest2, () => {
+                    this.sound.play("BeanSound2");
                     this.forrest2.destroy();
                     CreateCrunchies();
                 });
     
                 this.physics.add.overlap(this.bean, this.crunchies, (bean, crunchy) => {
+                    this.sound.play("Crunch");
                     crunchy.destroy();
                     this.heartsEmitter.explode(1, crunchy.x, crunchy.y)
                     crunchCount--;
@@ -206,7 +229,10 @@ class Example extends Phaser.Scene {
         });
 
         this.input.on("pointerup", () => {
-            this.bean.destroy();
+            if (this.bean) {
+                this.bean.destroy();
+            }
+          
         });
     }
 
@@ -219,7 +245,7 @@ class Example extends Phaser.Scene {
             parent: "phaser-container",
             width: 800,
             height: 600,
-            scene: Example,
+            scene: [StartScene, Example],
             scale: {
                 mode: Phaser.Scale.RESIZE,
                 autoCenter: Phaser.Scale.CENTER_BOTH
@@ -228,7 +254,7 @@ class Example extends Phaser.Scene {
                 default: "arcade",
                 arcade: {
                     gravity: { y: 0 },
-                    debug: true,
+                    //debug: true,
                 },
             },
         };
@@ -243,12 +269,10 @@ class Example extends Phaser.Scene {
 
 
 //TO DO
-//scale beans
-//crop some
-//test both fancy beans
 
-//add Forrest to activate crunchies. maybe that and water
+
+//add Forrest sleeping for crunchy one
 
 //start screen?
 
-//
+//sounds! scream when eat forrest

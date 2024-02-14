@@ -19,7 +19,7 @@ const paths = [
   { to: "/sourceandsink", element: <SourceAndSink />, includeInNav: true, name: "SourceAndSink"},
   { to: "/multifirework", element: <MultiFireWork />, includeInNav: true, name: "MultiFireWork"},
   { to: "/circlebouncetone", element: <CircleBounceTone />, includeInNav: false, name: "CircleBounceTone"},
-  { to: "/beanboy", element: <BeanBoy />, includeInNav: false, name: "BeanBoy"}
+  { to: "/beanboy", element: <BeanBoy />, includeInNav: true, name: "BeanBoy"}
 
 ];
 
