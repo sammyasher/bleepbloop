@@ -8,7 +8,10 @@ import { Route } from "react-router-dom";
 import { MultiFireWork } from "../MultiFireWork";
 import { CircleBounceTone } from "../CircleBounceTone";
 import { BeanBoy } from "../BeanBoy";
-import { useNavigate } from "react-router-dom";  
+import { GlowTone } from "../GlowTone";
+import { Glorp } from "../Glorp";
+import { useNavigate } from "react-router-dom";
+  
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home"},
@@ -19,7 +22,9 @@ const paths = [
   { to: "/sourceandsink", element: <SourceAndSink />, includeInNav: true, name: "SourceAndSink"},
   { to: "/multifirework", element: <MultiFireWork />, includeInNav: true, name: "MultiFireWork"},
   { to: "/circlebouncetone", element: <CircleBounceTone />, includeInNav: false, name: "CircleBounceTone"},
-  { to: "/beanboy", element: <BeanBoy />, includeInNav: true, name: "BeanBoy"}
+  { to: "/beanboy", element: <BeanBoy />, includeInNav: true, name: "BeanBoy"},
+  { to: "/glowtone", element: <GlowTone />, includeInNav: false, name: "GlowTone"},
+  { to: "/Glorp", element: <Glorp />, includeInNav: true, name: "Glorp"}
 
 ];
 

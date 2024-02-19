@@ -22,10 +22,14 @@ import Crunch from "../assets/BeanBoy/Sounds/Crunch.mp3";
 
 
 class StartScene extends Phaser.Scene {
+    constructor() {
+        super('StartScene');
+    }
+
     create() {
-        let startButton = this.add.text(this.scale.width / 2, this.scale.height / 2, 'Start', { 
-            font: '64px Arial', 
-            fill: '#ffffff' 
+        let startButton = this.add.text(this.scale.width / 2, this.scale.height / 2, 'Start', {
+            font: '64px Arial',
+            fill: '#ffffff'
         }).setInteractive().setOrigin(0.5);
 
         startButton.on('pointerdown', () => {
@@ -38,7 +42,7 @@ class StartScene extends Phaser.Scene {
 class Example extends Phaser.Scene {
     constructor() {
         super('Example');
-        this.dripCount = 10;
+        this.dripCount = 13;
         this.drips = null;
         this.faucet = null;
         this.dripTimer = null;
@@ -66,20 +70,21 @@ class Example extends Phaser.Scene {
         this.load.audio("Crunch", Crunch);
 
     }
+
     DestroyDrips = () => {
         if (this.drips) {
             this.dripTimer.destroy(); // Destroy the drip timer.
         }
         if (this.faucet) {
             this.faucet.destroy(); // Destroy the faucet object.
-             // Clear the reference.
+            // Clear the reference.
         }
-        this.dripCount = 10; // Reset the drip count.
+        this.dripCount = 13; // Reset the drip count.
     }
-    
+
     create() {
 
-        
+        //create hearts emitter
         this.heartsEmitter = this.add.particles(0, 0, "Heart", {
             //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
             speed: 100,
@@ -91,7 +96,8 @@ class Example extends Phaser.Scene {
             emitting: true,
             Depth: 3,
         }).setDepth(3);
- 
+
+        //create faucet and drips
         const CreateFaucetAndDrips = () => {
             this.faucet = this.physics.add.image(0, 60, "Faucet").setScale(.5);
             this.drips = this.physics.add.group();
@@ -103,7 +109,7 @@ class Example extends Phaser.Scene {
                 yoyo: true,
                 repeat: -1,
             });
-            
+
             const CreateDrips = () => {
                 const drip = this.drips.create(this.faucet.x + 30, this.faucet.y + 50, 'Drips').setScale(.05);
                 drip.setGravityY(200); // Adjust gravity as needed
@@ -111,13 +117,13 @@ class Example extends Phaser.Scene {
                 drip.setDepth(-1);
             }
 
-            this.dripTimer = this.time.addEvent({ 
+            this.dripTimer = this.time.addEvent({
                 delay: 400,
                 callback: CreateDrips,
                 callbackScope: this,
                 loop: true,
                 //turn off loop when dripCount === 0 by using the event's return value, liek this: 
-      
+
             });
         };
 
@@ -126,7 +132,7 @@ class Example extends Phaser.Scene {
         var crunchCount;
 
         const CreateCrunchies = () => {
-            const crunchAmount = 8;
+            const crunchAmount = 12;
             crunchCount = crunchAmount;
             for (let i = 0; i < crunchAmount; i++) {
                 const crunchy = this.crunchies.create(Phaser.Math.Between(0, this.scale.width), 0, "Crunchy").setScale(.2);
@@ -138,7 +144,7 @@ class Example extends Phaser.Scene {
             }
         }
 
-        //create Forrest
+        //create Forrest1
         const Forrest1 = () => {
             this.forrest1 = this.physics.add.sprite(this.scale.width * .9, this.scale.height + 50, "Forrest1").setScale(.8);
             // popup from bottom right tween and stay there
@@ -146,7 +152,7 @@ class Example extends Phaser.Scene {
                 targets: this.forrest1,
                 x: this.scale.width * .8,
                 y: this.scale.height - 100,
-                ease: "Power1",  
+                ease: "Power1",
                 duration: 3000,
                 yoyo: false,
                 repeat: 0,
@@ -155,20 +161,21 @@ class Example extends Phaser.Scene {
 
         Forrest1();
 
+        //create Forrest2
         const Forrest2 = () => {
-            this.forrest2 = this.physics.add.sprite(this.scale.width +100, this.scale.height / 2, "ForrestCouch").setScale(.5);
+            this.forrest2 = this.physics.add.sprite(this.scale.width + 100, this.scale.height / 2, "ForrestCouch").setScale(.5);
             // popup from bottom right tween and stay there
             this.tweens.add({
                 targets: this.forrest2,
-                x: this.scale.width -100,
+                x: this.scale.width - 100,
                 y: this.scale.height / 2,
-                ease: "Power1",
-                duration: 4000,
+                ease: "Power2",
+                duration: 2000,
                 repeat: 0,
             });
         }
 
-        //Bean
+        //create list of beanboys
         const BeanBoys = [
             "Bean1",
             "Bean2",
@@ -180,24 +187,24 @@ class Example extends Phaser.Scene {
             "Bean8",
         ];
 
+        //create and move bean with pointer
         this.input.on("pointerdown", (pointer) => {
             const randomBean = Phaser.Math.RND.pick(BeanBoys);
             this.bean = this.physics.add.sprite(pointer.x, pointer.y - 80, randomBean).setScale(0.5);
-
-
-            
-
         });
 
         this.input.on("pointermove", (pointer) => {
             if (this.bean) {
                 this.bean.setPosition(pointer.x, pointer.y - 80);
+
+                //overlap forrest1 to turn on drips
                 this.physics.add.overlap(this.bean, this.forrest1, () => {
                     this.sound.play("BeanSound1");
-                    this.forrest1.destroy();    
+                    this.forrest1.destroy();
                     CreateFaucetAndDrips();
                 });
-    
+
+                //drink drips and activate forrest2
                 this.physics.add.overlap(this.bean, this.drips, (bean, drip) => {
                     this.sound.play("WaterDrop");
                     drip.destroy();
@@ -205,16 +212,18 @@ class Example extends Phaser.Scene {
                     this.dripCount--;
                     if (this.dripCount === 0) {
                         this.DestroyDrips();
-                        Forrest2();       
+                        Forrest2();
                     }
                 });
-    
+
+                //overlap forrest2 to release crunchies
                 this.physics.add.overlap(this.bean, this.forrest2, () => {
                     this.sound.play("BeanSound2");
                     this.forrest2.destroy();
                     CreateCrunchies();
                 });
-    
+
+                //eat crunchies and activate forrest1
                 this.physics.add.overlap(this.bean, this.crunchies, (bean, crunchy) => {
                     this.sound.play("Crunch");
                     crunchy.destroy();
@@ -225,54 +234,44 @@ class Example extends Phaser.Scene {
                     }
                 });
             }
-            
+
         });
 
         this.input.on("pointerup", () => {
             if (this.bean) {
                 this.bean.destroy();
             }
-          
+
         });
     }
 
-    }
+}
 
-    export const BeanBoy = () => {
-        //config
-        const config = {
-            type: Phaser.AUTO,
-            parent: "phaser-container",
-            width: 800,
-            height: 600,
-            scene: [StartScene, Example],
-            scale: {
-                mode: Phaser.Scale.RESIZE,
-                autoCenter: Phaser.Scale.CENTER_BOTH
+export const BeanBoy = () => {
+    //config
+    const config = {
+        type: Phaser.AUTO,
+        parent: "phaser-container",
+        width: 800,
+        height: 600,
+        scene: [StartScene, Example],
+        scale: {
+            mode: Phaser.Scale.RESIZE,
+            autoCenter: Phaser.Scale.CENTER_BOTH
+        },
+        physics: {
+            default: "arcade",
+            arcade: {
+                gravity: { y: 0 },
+                //debug: true,
             },
-            physics: {
-                default: "arcade",
-                arcade: {
-                    gravity: { y: 0 },
-                    //debug: true,
-                },
-            },
-        };
-
-        //render gamecomponent
-        return (
-            <div>
-                <GameComponent config={config} />
-            </div>
-        );
+        },
     };
 
-
-//TO DO
-
-
-//add Forrest sleeping for crunchy one
-
-//start screen?
-
-//sounds! scream when eat forrest
+    //render gamecomponent
+    return (
+        <div>
+            <GameComponent config={config} />
+        </div>
+    );
+};
