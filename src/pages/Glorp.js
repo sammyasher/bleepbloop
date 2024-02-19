@@ -9,8 +9,6 @@ import WaterDrop from "../assets/BeanBoy/Sounds/WaterDrop.mp3";
 import GlorpSmallEyesSpritesheet from "../assets/Glorp/GlorpSmallEyesSpritesheet.png";
 import Splat from "../assets/Glorp/Splat1.mp3";
 
-//refactor (replace word: pen) with (word: projectile) or (word: eyes), maybe better to make agnostic for future use
-
 class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, hitpoints = 10){
         super(scene, scene.scale.width/2, scene.scale.height-100, "GlorpSprite"); 
