@@ -1,6 +1,6 @@
 import React from "react";
 import Phaser from "phaser";
-import * as Tone from "tone";
+import * as Tone from "tone"; // 
 import { GameComponent } from "../components/GameComponent";
 
 
@@ -50,11 +50,8 @@ class Example extends Phaser.Scene {
       
 
       emitCallback: () => {
-        console.log('callback called/particle emitted');
           const randomNote = notes[Math.floor(Math.random() * notes.length)];
-        console.log('random chosen');
           synth.triggerAttackRelease(randomNote, "8n");
-        console.log('synth triggered');
       },
    
       //onParticleEmit:
