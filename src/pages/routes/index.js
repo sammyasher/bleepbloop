@@ -10,6 +10,7 @@ import { CircleBounceTone } from "../CircleBounceTone";
 import { BeanBoy } from "../BeanBoy";
 import { GlowTone } from "../GlowTone";
 import { Glorp } from "../Glorp";
+import { SpringThing } from "../SpringThing";
 import { useNavigate } from "react-router-dom";
   
 
@@ -24,7 +25,8 @@ const paths = [
   { to: "/circlebouncetone", element: <CircleBounceTone />, includeInNav: false, name: "CircleBounceTone"},
   { to: "/beanboy", element: <BeanBoy />, includeInNav: true, name: "BeanBoy"},
   { to: "/glowtone", element: <GlowTone />, includeInNav: false, name: "GlowTone"},
-  { to: "/Glorp", element: <Glorp />, includeInNav: true, name: "Glorp"}
+  { to: "/Glorp", element: <Glorp />, includeInNav: true, name: "Glorp"},
+  { to: "/springthing", element: <SpringThing />, includeInNav: true, name: "SpringThing"}
 
 ];
 
