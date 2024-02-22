@@ -38,7 +38,7 @@ class Scene1 extends Phaser.Scene {
         this.spring4 = this.matter.add.spring(springHolder, circle4, height*.5, 0.001, { pointA: { x: -width/2 + width/1.5, y: 0 }});
         this.spring5 = this.matter.add.spring(springHolder, circle5, height*.6, 0.001, { pointA: { x: -width/2 + width/1.2, y: 0 }});
 
-        this.spring1.synth = new Tone.Synth().toDestination(); 
+        this.spring1.synth = new Tone.Synth().toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
         this.spring2.synth = new Tone.Synth().toDestination();
         this.spring3.synth = new Tone.Synth().toDestination();
         this.spring4.synth = new Tone.Synth().toDestination();
@@ -48,7 +48,7 @@ class Scene1 extends Phaser.Scene {
         this.input.on('pointerup', () => {
             this.matter.query.point(this.matter.world.localWorld.bodies, this.input.activePointer.position).forEach((body) => {  
                 if (body === circle1) {
-                    this.spring1.synth.triggerAttackRelease("C4", "1n");  
+                    this.spring1.synth.triggerAttackRelease("C4", "1n"); //longer than whole note possible? by using 1n  
                 };
                 if (body === circle2) {
                     this.spring2.synth.triggerAttackRelease("A3", "1n");
@@ -78,15 +78,15 @@ class Scene1 extends Phaser.Scene {
 
     update() {
         
-        const length1 = Phaser.Math.Distance.Between(this.spring1.pointA.x, this.spring1.pointB.y, this.spring1.bodyB.position.x, this.spring1.bodyB.position.y);  
-        const length2 = Phaser.Math.Distance.Between(this.spring2.bodyA.position.x, this.spring2.bodyA.position.y, this.spring2.bodyB.position.x, this.spring2.bodyB.position.y);
-        const length3 = Phaser.Math.Distance.Between(this.spring3.bodyA.position.x, this.spring3.bodyA.position.y, this.spring3.bodyB.position.x, this.spring3.bodyB.position.y);
-        const length4 = Phaser.Math.Distance.Between(this.spring4.bodyA.position.x, this.spring4.bodyA.position.y, this.spring4.bodyB.position.x, this.spring4.bodyB.position.y);
-        const length5 = Phaser.Math.Distance.Between(this.spring5.bodyA.position.x, this.spring5.bodyA.position.y, this.spring5.bodyB.position.x, this.spring5.bodyB.position.y);
+        const length1 = Phaser.Math.Distance.Between(this.spring1.bodyA.position.x + this.spring1.pointA.x, this.spring1.pointA.y, this.spring1.bodyB.position.x, this.spring1.bodyB.position.y);
+        const length2 = Phaser.Math.Distance.Between(this.spring2.bodyA.position.x + this.spring2.pointA.x, this.spring2.pointA.y, this.spring2.bodyB.position.x, this.spring2.bodyB.position.y);
+        const length3 = Phaser.Math.Distance.Between(this.spring3.bodyA.position.x + this.spring3.pointA.x, this.spring3.pointA.y, this.spring3.bodyB.position.x, this.spring3.bodyB.position.y);
+        const length4 = Phaser.Math.Distance.Between(this.spring4.bodyA.position.x + this.spring4.pointA.x, this.spring4.pointA.y, this.spring4.bodyB.position.x, this.spring4.bodyB.position.y);
+        const length5 = Phaser.Math.Distance.Between(this.spring5.bodyA.position.x + this.spring5.pointA.x, this.spring5.pointA.y, this.spring5.bodyB.position.x, this.spring5.bodyB.position.y);
+        
+        console.log(length1, length2, length3, length4, length5);
 
-        console.log(length1); //is getConstraintLength a method of the world object? well,
-
-        this.spring1.synth.frequency.value = 1/length1 * this.freqScale; //but want it flipped so smaller length is higher frequency. so 
+        this.spring1.synth.frequency.value = 1/length1 * this.freqScale;  
         this.spring2.synth.frequency.value = 1/length2 * this.freqScale;
         this.spring3.synth.frequency.value = 1/length3 * this.freqScale;
         this.spring4.synth.frequency.value = 1/length4 * this.freqScale;

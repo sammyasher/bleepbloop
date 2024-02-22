@@ -36,7 +36,7 @@ const Dropdown = () => {
   return (
     <select onChange={(event) => {navigate(event.target.value)}}>   
       {paths.filter((path) => path.includeInNav).map((path) => (
-          <option value={path.to}>{path.name}</option> 
+          <option key={path.name} value={path.to}>{path.name}</option>
         ))}
     </select>
   );
