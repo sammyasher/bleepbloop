@@ -3,11 +3,13 @@ import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import Faucet from "../assets/BeanBoy/Faucet.png";
 import Drips from "../assets/BeanBoy/Drips.png";
-import CharacterSprite from "../assets/Glorp/Glorpo.png";
+// import CharacterSprite from "../assets/Glorp/Glorpo.png";
 import Woosh from "../assets/BeanBoy/Sounds/woosh.mp3";
 import WaterDrop from "../assets/BeanBoy/Sounds/WaterDrop.mp3";
 import GlorpSmallEyesSpritesheet from "../assets/Glorp/GlorpSmallEyesSpritesheet.png";
 import Splat from "../assets/Glorp/Splat1.mp3";
+import CharacterSprite from "../assets/Samojis/SamOne.png";
+import YellowParticle from "../assets/particles/yellow.circular.png";
 
 class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, hitpoints = 10) {
@@ -18,7 +20,16 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
       "GlorpSprite"
     );
     scene.add.existing(this);
-    scene.physics.world.enable(this);
+    this.scene.physics.world.enable(this);
+    this.scene.physics.world.setBounds(
+      0,
+      0,
+      this.scene.scale.width,
+      this.scene.scale.height
+    );
+    this.setCollideWorldBounds(true);
+    this.setBounce(0.5);
+
     this.setScale(0.4);
 
     // this.forrestSprite = this.scene.physics.add.sprite(this.scene.scale.width/2, this.scene.scale.height-228, "ForrestSprite").setScale(.4); //how to setscale based on ratio of screen, no matter the sprite size?
@@ -27,11 +38,28 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
 
     this.eyelets = this.scene.physics.add.group();
     this.scene.input.on("pointerdown", () => {
+      this.setAccelerationY(-800);
+    });
+
+    this.scene.input.on("pointerup", () => {
+      this.setAccelerationY(1100);
+    });
+
+    this.spaceBar = scene.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
+    this.spaceBar.on("down", () => {
       this.Attack();
+    });
+
+    this.eKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    this.eKey.on("down", () => {
+      this.upAttack();
     });
 
     this.scene.input.on("pointermove", (pointer) => {
       this.x = pointer.x;
+      // this.y = pointer.y;
     });
 
     this.deathExplosion = this.scene.add.particles("Red", {
@@ -48,12 +76,37 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
     this.scene.sound.play("Woosh", { volume: 0.2 });
     this.eyelet = this.eyelets
       .create(this.x - 10, this.y - 30, "GlorpSmallEyesSpritesheet")
-      .setVelocityY(-600)
+      .setVelocityY(-100)
+      .setVelocityX(100)
+      .setAccelerationX(300)
+      .setAccelerationY(100)
       .setScale(0.1);
+
     this.eyelet.play("wiggle");
-    this.eyelet.damage = 1;
+    this.eyelet.damage = 5;
   }
 
+  upAttack() {
+    this.scene.sound.play("Woosh", { volume: 0.2 });
+
+    const numberOfParticles = 8;
+
+    // Loop to create multiple particles
+    for (let i = 0; i < numberOfParticles; i++) {
+      let eyelet = this.eyelets
+        .create(
+          this.x - 10 + Phaser.Math.Between(-10, 10), // Slight variation in x position
+          this.y - 30,
+          "YellowParticle"
+        )
+        .setVelocityY(-400 + Phaser.Math.Between(-100, 100))
+        .setVelocityX(Phaser.Math.Between(-100, 100))
+        .setAccelerationY(300)
+        .setScale(0.3);
+
+      eyelet.damage = 1;
+    }
+  }
   TakeDamage(damage) {
     this.setTint(0x00ff00); //alt, tintfill?
     this.scene.time.delayedCall(100, () => {
@@ -63,12 +116,14 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
     this.hitpoints -= damage;
     if (this.hitpoints <= 0) {
       this.scene.scene.start("GameOver");
+    } else {
+      this.scene.updateHitPointsText();
     }
   }
 }
 
 class DrippingFaucet extends Phaser.Physics.Arcade.Image {
-  constructor(scene, dripDelay = 400, faucetSpeed = 3000, hitpoints = 10) {
+  constructor(scene, dripDelay = 750, faucetSpeed = 3000, hitpoints = 10) {
     super(scene, 0, 60, "Faucet");
     scene.add.existing(this);
     scene.physics.world.enable(this);
@@ -80,7 +135,7 @@ class DrippingFaucet extends Phaser.Physics.Arcade.Image {
     this.drips = this.scene.physics.add.group();
 
     this.MoveFaucet();
-    this.hitpoints = 10;
+    this.hitpoints = 30;
 
     this.DripsOn();
   }
@@ -88,7 +143,11 @@ class DrippingFaucet extends Phaser.Physics.Arcade.Image {
   MoveFaucet = () => {
     this.scene.tweens.add({
       targets: this,
-      x: this.scene.scale.width - 100,
+      y: { from: 0, to: this.scene.scale.height - 100 },
+      x: {
+        from: this.scene.scale.width - 100,
+        to: this.scene.scale.width - 100,
+      },
       ease: "Sine.easeInOut",
       duration: this.faucetSpeed,
       yoyo: true,
@@ -101,7 +160,8 @@ class DrippingFaucet extends Phaser.Physics.Arcade.Image {
       .create(this.x + 30, this.y + 50, "Drips")
       .setScale(0.05)
       .setGravityY(200)
-      .setVelocityY(100)
+      .setVelocityY(-this.y)
+      .setVelocityX(-300)
       .setDepth(-1)
       .setTint(0x00ff00);
     this.drip.damage = 1;
@@ -127,6 +187,8 @@ class DrippingFaucet extends Phaser.Physics.Arcade.Image {
       this.scene.scene.start("Win");
       this.destroy();
       this.dripTimer.destroy();
+    } else {
+      this.scene.updateHitPointsText();
     }
   }
 }
@@ -208,6 +270,8 @@ class GameOver extends Phaser.Scene {
 class Scene1 extends Phaser.Scene {
   constructor() {
     super("Scene1");
+    this.glorpHitpointsText = null;
+    this.faucetHitpointsText = null;
   }
 
   preload() {
@@ -217,6 +281,7 @@ class Scene1 extends Phaser.Scene {
     this.load.audio("Woosh", Woosh);
     this.load.audio("WaterDrop", WaterDrop);
     this.load.audio("Splat", Splat);
+    this.load.image("YellowParticle", YellowParticle);
     this.load.spritesheet(
       "GlorpSmallEyesSpritesheet",
       GlorpSmallEyesSpritesheet,
@@ -225,6 +290,15 @@ class Scene1 extends Phaser.Scene {
   }
 
   create() {
+    this.faucetHitpointsText = this.add.text(10, 10, "Faucet HP: 30", {
+      font: "32px Arial",
+      fill: "#ffffff",
+    });
+    this.glorpHitpointsText = this.add.text(10, 50, "Glorp HP: 10", {
+      font: "32px Arial",
+      fill: "#ffffff",
+    });
+
     this.anims.create({
       key: "wiggle",
       frames: this.anims.generateFrameNumbers("GlorpSmallEyesSpritesheet", {
@@ -264,6 +338,14 @@ class Scene1 extends Phaser.Scene {
 
     console.log("Glorp hp: " + this.glorp.hitpoints);
     console.log("Faucet hp: " + this.faucet.hitpoints);
+
+    this.physics.add.overlap(this.faucet, this.glorp, (obj1, obj2) => {
+      if (obj1.texture.key === "Faucet" && obj2.texture.key === "GlorpSprite") {
+        obj2.TakeDamage(obj2.hitpoints);
+      } else {
+        obj1.TakeDamage(obj1.hitpoints);
+      }
+    });
 
     this.physics.add.overlap(this.faucet.drips, this.glorp, (obj1, obj2) => {
       if (
@@ -307,9 +389,14 @@ class Scene1 extends Phaser.Scene {
       }
     });
   }
+
+  updateHitPointsText() {
+    this.faucetHitpointsText.setText(`Faucet HP: ${this.faucet.hitpoints}`);
+    this.glorpHitpointsText.setText(`Glorp HP: ${this.glorp.hitpoints}`);
+  }
 }
 
-export const Glorp = () => {
+export const SideScroller = () => {
   //config
   const config = {
     type: Phaser.AUTO,
@@ -332,8 +419,18 @@ export const Glorp = () => {
 
   //render gamecomponent
   return (
-    <div>
+    <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+        }}
+      >
+        <div>Click Mouse to Fly!</div>
+        <div>Press SPACE and E to attack enemy</div>
+      </div>
       <GameComponent config={config} />
-    </div>
+    </>
   );
 };
