@@ -123,8 +123,36 @@ class Missile extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, "SpriteMissile");
     scene.add.existing(this);
     scene.physics.world.enable(this);
-    this.setScale(0.3);
-    this.damage = 5;
+    this.setVelocity(200, -200);
+    this.setScale(0.5);
+    this.startEmitting(scene);
+  }
+
+  startEmitting(scene) {
+    this.emitTimer = scene.time.addEvent({
+      delay: 100,
+      callback: () => {
+        let particle = scene.physics.add.sprite(
+          this.x,
+          this.y,
+          "SpriteMissile"
+        );
+        scene.physics.world.enable(particle);
+        particle.setScale(0.15);
+        particle.setVelocity(-25, Phaser.Math.Between(80, 100));
+
+        scene.time.delayedCall(1000, () => particle.destroy());
+      },
+      callbackScope: this,
+      loop: true,
+    });
+  }
+
+  preDestroy() {
+    // Clean up
+    if (this.emitTimer) {
+      this.emitTimer.remove();
+    }
   }
 }
 
