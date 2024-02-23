@@ -25,7 +25,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
     this.setBounce(0.5);
 
-    this.setScale(0.3);
+    this.setScale(0.2);
 
     // this.forrestSprite = this.scene.physics.add.sprite(this.scene.scale.width/2, this.scene.scale.height-228, "ForrestSprite").setScale(.4); //how to setscale based on ratio of screen, no matter the sprite size?
 
