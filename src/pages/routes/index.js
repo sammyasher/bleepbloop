@@ -11,7 +11,7 @@ import { BeanBoy } from "../BeanBoy";
 import { GlowTone } from "../GlowTone";
 import { Glorp } from "../Glorp";
 import { SpringThing } from "../SpringThing";
-import { SideScroller } from "../SideScroller";
+import { HyperStimulus } from "../HyperStimulus";
 import { useNavigate } from "react-router-dom";
 
 const paths = [
@@ -69,7 +69,7 @@ const paths = [
   },
   {
     to: "/HyperStimulus",
-    element: <SideScroller />,
+    element: <HyperStimulus />,
     includeInNav: true,
     name: "HyperStimulus",
   },
