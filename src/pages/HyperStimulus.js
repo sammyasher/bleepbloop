@@ -3,22 +3,17 @@ import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import Faucet from "../assets/BeanBoy/Faucet.png";
 import Drips from "../assets/BeanBoy/Drips.png";
-// import CharacterSprite from "../assets/Glorp/Glorpo.png";
+
 import Woosh from "../assets/BeanBoy/Sounds/woosh.mp3";
 import WaterDrop from "../assets/BeanBoy/Sounds/WaterDrop.mp3";
-import GlorpSmallEyesSpritesheet from "../assets/Glorp/GlorpSmallEyesSpritesheet.png";
+import SpriteMissile from "../assets/particles/red.circular.png";
 import Splat from "../assets/Glorp/Splat1.mp3";
-import CharacterSprite from "../assets/Samojis/SamOne.png";
+import CharacterSprite from "../assets/HyperStimulus/robotpng.parspng.com-5.png";
 import YellowParticle from "../assets/particles/yellow.circular.png";
 
-class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, hitpoints = 10) {
-    super(
-      scene,
-      scene.scale.width / 2,
-      scene.scale.height - 100,
-      "GlorpSprite"
-    );
+class Player extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene, hitpoints = 10, score = 0) {
+    super(scene, scene.scale.width / 2, scene.scale.height - 100, "Player");
     scene.add.existing(this);
     this.scene.physics.world.enable(this);
     this.scene.physics.world.setBounds(
@@ -30,13 +25,16 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
     this.setBounce(0.5);
 
-    this.setScale(0.4);
+    this.setScale(0.3);
 
     // this.forrestSprite = this.scene.physics.add.sprite(this.scene.scale.width/2, this.scene.scale.height-228, "ForrestSprite").setScale(.4); //how to setscale based on ratio of screen, no matter the sprite size?
 
     this.hitpoints = hitpoints; //default 10
+    this.score = score;
 
-    this.eyelets = this.scene.physics.add.group();
+    this.missiles = this.scene.physics.add.group({
+      immovable: false,
+    });
     this.scene.input.on("pointerdown", () => {
       this.setAccelerationY(-800);
     });
@@ -74,16 +72,14 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
 
   Attack() {
     this.scene.sound.play("Woosh", { volume: 0.2 });
-    this.eyelet = this.eyelets
-      .create(this.x - 10, this.y - 30, "GlorpSmallEyesSpritesheet")
-      .setVelocityY(-100)
-      .setVelocityX(100)
-      .setAccelerationX(300)
-      .setAccelerationY(100)
-      .setScale(0.1);
 
-    this.eyelet.play("wiggle");
-    this.eyelet.damage = 5;
+    let missile = new Missile(this.scene, this.x, this.y - 30);
+    this.missiles.add(missile); // Assuming missiles is a physics group
+    missile.body.setVelocityX(100);
+    missile.body.setAccelerationX(200);
+    missile.body.setVelocityY(-100);
+    missile.body.setAccelerationY(100);
+    missile.damage = 5;
   }
 
   upAttack() {
@@ -93,7 +89,7 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
 
     // Loop to create multiple particles
     for (let i = 0; i < numberOfParticles; i++) {
-      let eyelet = this.eyelets
+      let missile = this.missiles
         .create(
           this.x - 10 + Phaser.Math.Between(-10, 10), // Slight variation in x position
           this.y - 30,
@@ -104,7 +100,7 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
         .setAccelerationY(300)
         .setScale(0.3);
 
-      eyelet.damage = 1;
+      missile.damage = 1;
     }
   }
   TakeDamage(damage) {
@@ -119,6 +115,16 @@ class GlorpSprite extends Phaser.Physics.Arcade.Sprite {
     } else {
       this.scene.updateHitPointsText();
     }
+  }
+}
+
+class Missile extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene, x, y) {
+    super(scene, x, y, "SpriteMissile");
+    scene.add.existing(this);
+    scene.physics.world.enable(this);
+    this.setScale(0.3);
+    this.damage = 5;
   }
 }
 
@@ -270,23 +276,22 @@ class GameOver extends Phaser.Scene {
 class Scene1 extends Phaser.Scene {
   constructor() {
     super("Scene1");
-    this.glorpHitpointsText = null;
+    this.playerHitpointsText = null;
     this.faucetHitpointsText = null;
   }
 
   preload() {
     this.load.image("Faucet", Faucet);
     this.load.image("Drips", Drips);
-    this.load.image("GlorpSprite", CharacterSprite);
+    this.load.image("Player", CharacterSprite);
     this.load.audio("Woosh", Woosh);
     this.load.audio("WaterDrop", WaterDrop);
     this.load.audio("Splat", Splat);
     this.load.image("YellowParticle", YellowParticle);
-    this.load.spritesheet(
-      "GlorpSmallEyesSpritesheet",
-      GlorpSmallEyesSpritesheet,
-      { frameWidth: 411, frameHeight: 607 }
-    );
+    this.load.spritesheet("SpriteMissile", SpriteMissile, {
+      frameWidth: 411,
+      frameHeight: 607,
+    });
   }
 
   create() {
@@ -294,23 +299,23 @@ class Scene1 extends Phaser.Scene {
       font: "32px Arial",
       fill: "#ffffff",
     });
-    this.glorpHitpointsText = this.add.text(10, 50, "Glorp HP: 10", {
+    this.playerHitpointsText = this.add.text(10, 50, "Player HP: 10", {
       font: "32px Arial",
       fill: "#ffffff",
     });
 
-    this.anims.create({
-      key: "wiggle",
-      frames: this.anims.generateFrameNumbers("GlorpSmallEyesSpritesheet", {
-        start: 0,
-        end: 1,
-      }),
-      frameRate: 5,
-      repeat: -1,
-    });
+    // this.anims.create({
+    //   key: "wiggle",
+    //   frames: this.anims.generateFrameNumbers("SpriteMissile", {
+    //     start: 0,
+    //     end: 1,
+    //   }),
+    //   frameRate: 5,
+    //   repeat: -1,
+    // });
 
     this.faucet = new DrippingFaucet(this); //moves back n' forth shooting drips
-    this.glorp = new GlorpSprite(this); //follows pointer and attacks on click
+    this.player = new Player(this); //follows pointer and attacks on click
 
     const droplets = this.add.particles(0, 0, "Drips", {
       speed: { min: 80, max: 100 },
@@ -324,7 +329,7 @@ class Scene1 extends Phaser.Scene {
       angle: { min: 180, max: 360 },
     });
 
-    const eyeletsExplode = this.add.particles(0, 0, "Drips", {
+    const missilesExplode = this.add.particles(0, 0, "Drips", {
       speed: { min: 0, max: 100 }, //to vary speeds, use { min: 0, max: 1000}
       frequency: -1,
       lifespan: 1600,
@@ -336,18 +341,20 @@ class Scene1 extends Phaser.Scene {
       angle: { min: 0, max: 180 },
     });
 
-    console.log("Glorp hp: " + this.glorp.hitpoints);
+    console.log("player hp: " + this.player.hitpoints);
     console.log("Faucet hp: " + this.faucet.hitpoints);
 
-    this.physics.add.overlap(this.faucet, this.glorp, (obj1, obj2) => {
-      if (obj1.texture.key === "Faucet" && obj2.texture.key === "GlorpSprite") {
+    //COLLIDERS//
+
+    this.physics.add.overlap(this.faucet, this.player, (obj1, obj2) => {
+      if (obj1.texture.key === "Faucet" && obj2.texture.key === "Player") {
         obj2.TakeDamage(obj2.hitpoints);
       } else {
         obj1.TakeDamage(obj1.hitpoints);
       }
     });
 
-    this.physics.add.overlap(this.faucet.drips, this.glorp, (obj1, obj2) => {
+    this.physics.add.overlap(this.faucet.drips, this.player, (obj1, obj2) => {
       if (
         obj1.texture.key === "Drips" &&
         obj2.texture.key === "ForrestSprite"
@@ -363,36 +370,40 @@ class Scene1 extends Phaser.Scene {
     });
 
     this.physics.add.overlap(
-      this.glorp.eyelets,
+      this.player.missiles,
       this.faucet.drips,
       (pen, drip) => {
         this.sound.play("WaterDrop");
         this.sound.play("Splat", { volume: 0.1 });
         droplets.explode(10, drip.x, drip.y);
-        eyeletsExplode.explode(10, drip.x, drip.y);
+        missilesExplode.explode(10, drip.x, drip.y);
         drip.destroy();
         pen.destroy();
       }
     );
 
-    this.physics.add.overlap(this.glorp.eyelets, this.faucet, (obj1, obj2) => {
-      if (obj1.texture.key === "Pen" && obj2.texture.key === "Faucet") {
-        eyeletsExplode.explode(10, obj1.x, obj1.y - 30);
-        this.sound.play("Splat", { volume: 0.1 }); //half volume would be 0.5, using sytax like this: this.sound.play("MetalHit", {volume: 0.5});
-        obj2.TakeDamage(obj1.damage);
-        obj1.destroy();
-      } else {
-        eyeletsExplode.explode(10, obj2.x, obj2.y - 30);
-        this.sound.play("Splat", { volume: 0.1 }); //to make it play volume half, add
-        obj1.TakeDamage(obj2.damage);
-        obj2.destroy();
+    this.physics.add.overlap(
+      this.player.missiles,
+      this.faucet,
+      (obj1, obj2) => {
+        if (obj1.texture.key === "Pen" && obj2.texture.key === "Faucet") {
+          missilesExplode.explode(10, obj1.x, obj1.y - 30);
+          this.sound.play("Splat", { volume: 0.1 }); //half volume would be 0.5, using sytax like this: this.sound.play("MetalHit", {volume: 0.5});
+          obj2.TakeDamage(obj1.damage);
+          obj1.destroy();
+        } else {
+          missilesExplode.explode(10, obj2.x, obj2.y - 30);
+          this.sound.play("Splat", { volume: 0.1 }); //to make it play volume half, add
+          obj1.TakeDamage(obj2.damage);
+          obj2.destroy();
+        }
       }
-    });
+    );
   }
 
   updateHitPointsText() {
     this.faucetHitpointsText.setText(`Faucet HP: ${this.faucet.hitpoints}`);
-    this.glorpHitpointsText.setText(`Glorp HP: ${this.glorp.hitpoints}`);
+    this.playerHitpointsText.setText(`player HP: ${this.player.hitpoints}`);
   }
 }
 
@@ -412,7 +423,7 @@ export const HyperStimulus = () => {
       default: "arcade",
       arcade: {
         gravity: { y: 0 },
-        //debug: true,
+        debug: false,
       },
     },
   };
