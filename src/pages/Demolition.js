@@ -28,7 +28,7 @@ class Scene1 extends Phaser.Scene {
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < columns; j++) {
           this.matter.add.rectangle(
-            xPosition - j * xDimension,
+            xPosition - j * xDimension - j,
             yPosition - i * yDimension,
             xDimension,
             yDimension
@@ -36,22 +36,23 @@ class Scene1 extends Phaser.Scene {
         }
       }
     };
-    const rectangleWidth = 100;
-    const rectangleHeight = 20;
+    const rectangleWidth = width / 15;
+    const rectangleHeight = rectangleWidth * 0.3;
     makeRectangles(
       25,
       5,
       rectangleWidth,
       rectangleHeight,
-      width * 0.9,
+      width * 0.75,
       height * 0.8
     );
 
     this.input.on("pointerdown", () => {
       const x = this.input.x;
       const y = this.input.y;
+      const demoWidth = Math.min(width / 20, 65);
 
-      const demoBall = this.matter.add.circle(x - 60, y + 80, 50);
+      const demoBall = this.matter.add.circle(x - 60, y + 80, demoWidth);
       const inputConnector = this.matter.add.circle(x, y, 10);
       this.demoSpring = this.matter.add.spring(
         inputConnector,
