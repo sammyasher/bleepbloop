@@ -22,9 +22,6 @@ class Scene1 extends Phaser.Scene {
 
         const springHolder = this.matter.add.rectangle(width/2, height/18/2, width, height/18, {isStatic: true});
 
-        
-        //const sillyBigBall = this.matter.add.circle(250, 50, 200, 32);
-
         const circle1 = this.matter.add.circle(width/6, 250, width/40);
         const circle2 = this.matter.add.circle((width/6)*2, 250, width/34);
         const circle3 = this.matter.add.circle((width/6)*3, 250, width/25);
@@ -38,44 +35,90 @@ class Scene1 extends Phaser.Scene {
         this.spring4 = this.matter.add.spring(springHolder, circle4, height*.5, 0.001, { pointA: { x: -width/2 + width/1.5, y: 0 }});
         this.spring5 = this.matter.add.spring(springHolder, circle5, height*.6, 0.001, { pointA: { x: -width/2 + width/1.2, y: 0 }});
 
-        this.spring1.synth = new Tone.Synth().toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
-        this.spring2.synth = new Tone.Synth().toDestination();
-        this.spring3.synth = new Tone.Synth().toDestination();
-        this.spring4.synth = new Tone.Synth().toDestination();
-        this.spring5.synth = new Tone.Synth().toDestination();
+        const oscillator = "triangle"
+        this.spring1.synth = new Tone.Synth({
+            oscillator: {
+                type: oscillator
+            },
+            volume: -8,
+            envelope: {
+                releaseCurve: "linear",
+                attack: 0.1,
+                decay: 3,   
+                sustain: .3,
+                release: 10
+            }}).toDestination(); 
+        this.spring2.synth = new Tone.Synth({
+            oscillator: {
+                type: oscillator
+            },
+            volume: -8, 
+            envelope: {
+                releaseCurve: "linear",
+                attack: 0.1,
+                decay: 3,
+                sustain: 0.3,
+                release: 10
+            }}).toDestination();
+        this.spring3.synth = new Tone.Synth({
+            oscillator: {
+                type: oscillator
+            },
+            volume: -8,
+            envelope: {
+                releaseCurve: "linear",
+                attack: 0.1,
+                decay: 3,
+                sustain: 0.3,
+                release: 10
+            }}).toDestination();
+        this.spring4.synth = new Tone.Synth({
+            oscillator: {
+                type: oscillator
+            },
+            volume: -8,
+            envelope: {
+                releaseCurve: "linear",
+                attack: 0.1,
+                decay: 3,
+                sustain: 0.3,
+                release: 10
+            }}).toDestination();
+        this.spring5.synth = new Tone.Synth({
+            oscillator: {
+                type: oscillator
+            },
+            volume: -8,
+            envelope: {
+                releaseCurve: "linear",
+                attack: 0.1,
+                decay: 3,
+                sustain: 0.3,
+                release: 10
+            }}).toDestination(); 
  
 
-        this.input.on('pointerup', () => {
+        this.input.on('pointerup', (pointer) => {
             this.matter.query.point(this.matter.world.localWorld.bodies, this.input.activePointer.position).forEach((body) => {  
                 if (body === circle1) {
-                    this.spring1.synth.triggerAttackRelease("C4", "1n"); //longer than whole note possible? by using 1n  
-                };
+                    this.spring1.synth.triggerAttackRelease(2)
+                }; 
                 if (body === circle2) {
-                    this.spring2.synth.triggerAttackRelease("A3", "1n");
+                    this.spring2.synth.triggerAttackRelease(2); 
                 };
                 if (body === circle3) {
-                    this.spring3.synth.triggerAttackRelease("G3", "1n");
+                    this.spring3.synth.triggerAttackRelease(2); 
                 };
                 if (body === circle4) {
-                    this.spring4.synth.triggerAttackRelease("E3", "1n");
+                    this.spring4.synth.triggerAttackRelease(2); 
                 };
                 if (body === circle5) {
-                    this.spring5.synth.triggerAttackRelease("C3", "1n");
+                    this.spring5.synth.triggerAttackRelease(2); 
                 };
-            });
-
+             });
         });
- 
-        // this.spring1.synthOn = true;
-        // this.spring2.synthOn = false;
-        // this.spring3.synthOn = false;
-        // this.spring4.synthOn = false;
-        // this.spring5.synthOn = false;
-
-         
-
     }
-
+    
     update() {
         
         const length1 = Phaser.Math.Distance.Between(this.spring1.bodyA.position.x + this.spring1.pointA.x, this.spring1.pointA.y, this.spring1.bodyB.position.x, this.spring1.bodyB.position.y);
