@@ -14,6 +14,7 @@ import { GlowTone } from "../GlowTone";
 import { Glorp } from "../Glorp";
 import { SpringThing } from "../SpringThing";
 import { HyperStimulus } from "../HyperStimulus";
+import { Demolition } from "../Demolition";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home" },
@@ -74,13 +75,18 @@ const paths = [
     includeInNav: true,
     name: "HyperStimulus",
   },
+  {
+    to: "/demolition",
+    element: <Demolition />,
+    includeInNav: true,
+    name: "Demolition",
+  },
 ];
 
 const Dropdown = () => {
   const navigate = useNavigate();
 
   return (
-
     <select
       onChange={(event) => {
         navigate(event.target.value);
@@ -90,7 +96,6 @@ const Dropdown = () => {
         .filter((path) => path.includeInNav)
         .map((path) => (
           <option value={path.to}>{path.name}</option>
-
         ))}
     </select>
   );
