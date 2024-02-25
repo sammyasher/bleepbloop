@@ -15,6 +15,7 @@ import { Glorp } from "../Glorp";
 import { SpringThing } from "../SpringThing";
 import { HyperStimulus } from "../HyperStimulus";
 import { Demolition } from "../Demolition";
+import { Tethered } from "../Tethered";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home" },
@@ -80,6 +81,12 @@ const paths = [
     element: <Demolition />,
     includeInNav: true,
     name: "Demolition",
+  },
+  {
+    to: "/tethered",
+    element: <Tethered />,
+    includeInNav: true,
+    name: "Tethered",
   },
 ];
 
