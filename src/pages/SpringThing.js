@@ -114,7 +114,7 @@ class Scene1 extends Phaser.Scene {
                 };
                 if (body === circle5) {
                     this.spring5.synth.triggerAttackRelease(2); 
-                };
+                }; 
              });
         });
     }
