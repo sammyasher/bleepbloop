@@ -36,8 +36,8 @@ class Scene1 extends Phaser.Scene {
         }
       }
     };
-    const rectangleWidth = 100;
-    const rectangleHeight = 20;
+    const rectangleWidth = width / 10;
+    const rectangleHeight = height / 30;
     makeRectangles(
       25,
       5,
@@ -60,14 +60,7 @@ class Scene1 extends Phaser.Scene {
         0.05
       );
     });
-    this.input.on("pointerup", () => {
-      this.matter.world.localWorld.bodies.forEach((body) => {
-        console.log(body);
-        if (body.gameObject === undefined) {
-          return;
-        }
-      });
-    });
+    this.input.on("pointerup", () => {});
   }
 
   update() {}

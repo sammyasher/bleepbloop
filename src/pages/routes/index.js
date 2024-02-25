@@ -95,7 +95,9 @@ const Dropdown = () => {
       {paths
         .filter((path) => path.includeInNav)
         .map((path) => (
-          <option value={path.to}>{path.name}</option>
+          <option value={path.to} key={path.name}>
+            {path.name}
+          </option>
         ))}
     </select>
   );
@@ -104,7 +106,7 @@ const Dropdown = () => {
 const navLinks = <Dropdown />;
 
 const routes = paths.map((path) => (
-  <Route path={path.to} element={path.element} />
+  <Route key={path.name} path={path.to} element={path.element} />
 ));
 
 export { paths, navLinks, routes };
