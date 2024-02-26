@@ -41,29 +41,31 @@ class Scene1 extends Phaser.Scene {
     const rectangleWidth = width * 0.15;
     const rectangleHeight = height * 0.15;
     const squareSide = Math.max(rectangleWidth, rectangleHeight);
+    const radius = squareSide / 2;
 
-    this.bigRectangle = this.matter.add.rectangle(
-      width * 0.5,
-      height * 0.9,
-      squareSide,
-      squareSide,
-      { mass: 5 }
-    );
+    // this.Tethered = this.matter.add.rectangle(
+    //   width * 0.5,
+    //   height * 0.9,
+    //   squareSide,
+    //   squareSide,
+    //   { mass: 5 }
+    // );
+
+    this.Tethered = this.matter.add.circle(width * 0.5, height * 0.9, radius, {
+      mass: 5,
+    });
 
     this.input.on("pointerdown", () => {
       const inputX = this.input.x;
       const inputY = this.input.y;
-      const bigX = this.bigRectangle.position.x;
-      const bigY = this.bigRectangle.position.y;
+      const bigX = this.Tethered.position.x;
+      const bigY = this.Tethered.position.y;
       const xOffset = (inputX - bigX) * 0.1;
       const yOffset = (inputY - bigY) * 0.1;
       const offsetDistance = Math.sqrt(xOffset ** 2 + yOffset ** 2);
       const randomColor = getRandomColor();
 
-      if (
-        Math.abs(xOffset) > squareSide / 20 ||
-        Math.abs(yOffset) > squareSide / 20
-      ) {
+      if (Math.abs(offsetDistance) > squareSide / 20) {
         const inputConnector = this.matter.add.circle(inputX, inputY, 10, {
           render: {
             fillStyle: randomColor,
@@ -72,7 +74,7 @@ class Scene1 extends Phaser.Scene {
         inputConnector.isStatic = true;
         this.demoSpring = this.matter.add.spring(
           inputConnector,
-          this.bigRectangle,
+          this.Tethered,
           offsetDistance * 3,
           0.02,
           {
@@ -90,16 +92,21 @@ class Scene1 extends Phaser.Scene {
           oscillator: {
             type: "sine",
           },
-          volume: -300 / offsetDistance - 5,
+          volume: -200 / offsetDistance - 7,
           name: "springTone",
         }).toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
 
         const LFOdetune = new Tone.LFO(offsetDistance / 400, -50, 20).start();
 
         LFOdetune.connect(springTone.detune);
-
+        const pan = new Tone.Panner(1).toDestination();
+        // const osc = new Tone.Oscillator(30000 / (offsetDistance * 5), "sine")
+        //   .connect(pan)
+        //   .start();
+        springTone.connect(pan);
         const now = Tone.now();
-        springTone.triggerAttack(40000 / (offsetDistance * 4), now);
+
+        springTone.triggerAttack(30000 / (offsetDistance * 5), now);
 
         springTone.triggerRelease(now + 10);
       }
