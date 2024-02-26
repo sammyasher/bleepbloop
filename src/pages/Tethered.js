@@ -2,6 +2,7 @@ import React from "react";
 import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
+import getRandomColor from "../helper-functions/getRandomColor";
 
 class Scene1 extends Phaser.Scene {
   constructor() {
@@ -57,13 +58,17 @@ class Scene1 extends Phaser.Scene {
       const xOffset = (inputX - bigX) * 0.1;
       const yOffset = (inputY - bigY) * 0.1;
       const offsetDistance = Math.sqrt(xOffset ** 2 + yOffset ** 2);
+      const randomColor = getRandomColor();
 
-      // const demoBall = this.matter.add.circle(x - 60, y + 80, 50);
       if (
         Math.abs(xOffset) > squareSide / 20 ||
         Math.abs(yOffset) > squareSide / 20
       ) {
-        const inputConnector = this.matter.add.circle(inputX, inputY, 10);
+        const inputConnector = this.matter.add.circle(inputX, inputY, 10, {
+          render: {
+            fillStyle: randomColor,
+          },
+        });
         inputConnector.isStatic = true;
         this.demoSpring = this.matter.add.spring(
           inputConnector,
@@ -72,31 +77,31 @@ class Scene1 extends Phaser.Scene {
           0.02,
           {
             pointA: { x: 0, y: 0 },
-            pointB: { x: xOffset, y: yOffset * 2 },
+            pointB: { x: xOffset * 0.7, y: yOffset * 0.7 },
           }
         );
         const springTone = new Tone.Synth({
           envelope: {
-            release: 1000 / offsetDistance,
+            attack: 0.02,
+            release: offsetDistance,
             releaseCurve: "linear",
           },
+
           oscillator: {
             type: "sine",
           },
-          volume: 0 - offsetDistance / 20,
+          volume: -300 / offsetDistance - 5,
           name: "springTone",
         }).toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
 
         const LFOdetune = new Tone.LFO(offsetDistance / 400, -50, 20).start();
-        // const lfoVolume = new Tone.LFO(offsetDistance / 30, -100, -10).start();
-        const springVolume = 100 / offsetDistance;
+
         LFOdetune.connect(springTone.detune);
-        // lfoVolume.connect(springTone.volume);
 
         const now = Tone.now();
-        springTone.triggerAttack(offsetDistance * 5 - 25, now);
+        springTone.triggerAttack(40000 / (offsetDistance * 4), now);
 
-        springTone.triggerRelease(now + 1);
+        springTone.triggerRelease(now + 10);
       }
     });
     this.input.on("pointerup", () => {
