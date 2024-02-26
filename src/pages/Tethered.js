@@ -1,6 +1,7 @@
 import React from "react";
 import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
+import * as Tone from "tone";
 
 class Scene1 extends Phaser.Scene {
   constructor() {
@@ -44,7 +45,8 @@ class Scene1 extends Phaser.Scene {
       width * 0.5,
       height * 0.9,
       squareSide,
-      squareSide
+      squareSide,
+      { mass: 5 }
     );
 
     this.input.on("pointerdown", () => {
@@ -54,14 +56,18 @@ class Scene1 extends Phaser.Scene {
       const bigY = this.bigRectangle.position.y;
       const xOffset = (inputX - bigX) * 0.1;
       const yOffset = (inputY - bigY) * 0.1;
+      const offsetDistance = Math.sqrt(xOffset ** 2 + yOffset ** 2);
 
       console.log(
-        "xOffset",
-        xOffset,
-        "yOffset",
-        yOffset,
-        "squareSide",
-        squareSide
+        "hello world"
+        //   "xOffset",
+        //   xOffset,
+        //   "yOffset",
+        //   yOffset,
+        //   "squareSide",
+        //   squareSide,
+        //   "offsetDistance",
+        //   offsetDistance
       );
 
       // const demoBall = this.matter.add.circle(x - 60, y + 80, 50);
@@ -74,8 +80,8 @@ class Scene1 extends Phaser.Scene {
         this.demoSpring = this.matter.add.spring(
           inputConnector,
           this.bigRectangle,
-          100,
-          0.05,
+          offsetDistance * 3,
+          0.02,
           {
             pointA: { x: 0, y: 0 },
             pointB: { x: xOffset, y: yOffset },

@@ -1,5 +1,6 @@
 import React from "react";
 import Phaser from "phaser";
+
 import { GameComponent } from "../components/GameComponent";
 
 class Scene1 extends Phaser.Scene {
@@ -16,13 +17,16 @@ class Scene1 extends Phaser.Scene {
     const height = this.scale.height;
 
     const makeRectangles = (
-      rows = 10,
-      columns = 3,
+      rows,
+      columns,
       xDimension = width / 10,
       yDimension = height / 18,
       xPosition = width * 0.5,
       yPosition = height * 0.5
     ) => {
+      rows = rows <= 0 ? 1 : rows;
+      columns = columns <= 0 ? 1 : columns;
+
       xDimension = xDimension <= 0 ? 1 : xDimension;
       yDimension = yDimension <= 0 ? 1 : yDimension;
       for (let i = 0; i < rows; i++) {
@@ -31,16 +35,20 @@ class Scene1 extends Phaser.Scene {
             xPosition - j * xDimension - j,
             yPosition - i * yDimension,
             xDimension,
-            yDimension
+            yDimension,
+            { restitution: 1, friction: 1 }
           );
         }
       }
     };
-    const rectangleWidth = width / 15;
-    const rectangleHeight = rectangleWidth * 0.3;
+    const rectangleHeight = height * 0.02;
+    const rectangleWidth = rectangleHeight * 3;
+    const rows = Math.floor((height * 0.7) / rectangleHeight);
+    const columns = Math.floor((width * 0.3) / rectangleWidth);
+
     makeRectangles(
-      25,
-      5,
+      rows,
+      columns,
       rectangleWidth,
       rectangleHeight,
       width * 0.75,
@@ -50,25 +58,18 @@ class Scene1 extends Phaser.Scene {
     this.input.on("pointerdown", () => {
       const x = this.input.x;
       const y = this.input.y;
-      const demoWidth = Math.min(width / 20, 65);
+      const demoWidth = Math.min(width / 10, 65);
 
       const demoBall = this.matter.add.circle(x - 60, y + 80, demoWidth);
-      const inputConnector = this.matter.add.circle(x, y, 10);
+      const inputTether = this.matter.add.circle(x, y, 15);
       this.demoSpring = this.matter.add.spring(
-        inputConnector,
+        inputTether,
         demoBall,
         100,
-        0.05
+        0.075
       );
     });
-    this.input.on("pointerup", () => {
-      this.matter.world.localWorld.bodies.forEach((body) => {
-        console.log(body);
-        if (body.gameObject === undefined) {
-          return;
-        }
-      });
-    });
+    this.input.on("pointerup", () => {});
   }
 
   update() {}
