@@ -31,187 +31,103 @@ class Example extends Phaser.Scene {
       lifespan: 4400,
 
       scale: { start: 0.2, end: 0.8 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "ADD",
-      // angle: { min: -120, max: -60 },
-      // delay: 1000,
+
       gravityX: 200,
-      // gravityY: 1000
-      //moveToX: 100,  //activate both these to have particles sink into a specific point
-      //moveToY: 100,  //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
 
       follow: this.input.activePointer,
       emitting: false,
-
-      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
-      //onParticleEmit:
     });
     const smokeEnd = this.add.particles(0, 0, "smoke", {
-      //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
-
-      speed: 0, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      speed: 0,
       frequency: 100,
       lifespan: 4400,
 
-      scale: { start: 0.1, end: 2 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "ADD",
-      // angle: { min: -120, max: -60 },
-      // delay: 1000,
+      scale: { start: 0.1, end: 2 },
       gravityX: 100,
       gravityY: -200,
-      //moveToX: 100,  //activate both these to have particles sink into a specific point
-      //moveToY: 100,  //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
 
       follow: this.input.activePointer,
       emitting: false,
-
-      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
-      //onParticleEmit:
     });
     const ember = this.add.particles(0, 0, "yellow", {
-      //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
-
-      speed: 400, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      speed: 400,
       frequency: 12,
       lifespan: 200,
 
-      scale: { start: 0.8, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "ADD",
-      // angle: { min: -120, max: -60 },
-      // delay: 1000,
-      // gravityX: 200,
-      // gravityY: 1000
-      //moveToX: 100,  //activate both these to have particles sink into a specific point
-      //moveToY: 100,  //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
+      scale: { start: 0.8, end: 0 },
 
       follow: this.input.activePointer,
       emitting: false,
-
-      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
-      //onParticleEmit:
     });
     const downSpark = this.add.particles(0, 0, "yellow", {
-      //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
-
-      speed: 400, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      speed: 400,
       frequency: 1700,
       lifespan: 450,
 
-      scale: { start: 0.8, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "ADD",
+      scale: { start: 0.8, end: 0 },
       angle: { min: 40, max: 140 },
-      // delay: 1000,
-      // gravityX: 200,
-      gravityY: 800,
 
-      //moveToX: 100,  //activate both these to have particles sink into a specific point
-      //moveToY: 100,  //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
+      gravityY: 800,
 
       follow: this.input.activePointer,
       emitting: false,
-
-      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
-      //onParticleEmit:
     });
     const downSpark2 = this.add.particles(0, 0, "yellow", {
-      //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
-
-      speed: 400, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      speed: 400,
       frequency: 3000,
       lifespan: 800,
 
-      scale: { start: 0.8, end: 0 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "ADD",
+      scale: { start: 0.8, end: 0 },
       angle: { min: 30, max: 150 },
-      // delay: 1000,
       gravityX: 150,
       gravityY: 1000,
-      // moveToX: 0, //activate both these to have particles sink into a specific point
-      // moveToY: 0, //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
 
       follow: this.input.activePointer,
       emitting: false,
-
-      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
-      //onParticleEmit:
     });
     const spark2 = this.add.particles(0, 0, "yellow", {
-      //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
-
-      speed: 1600, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      speed: 1600,
       frequency: 1100,
       lifespan: 70,
 
-      scale: { start: 0.8, end: 2 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "ADD",
-      // angle: { min: 20, max: 60 },
-      // delay: 1000,
-      // gravityX: 200,
-      // gravityY: 1000
-      //moveToX: 100,  //activate both these to have particles sink into a specific point
-      //moveToY: 100,  //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
+      scale: { start: 0.8, end: 2 },
 
       follow: this.input.activePointer,
       emitting: false,
-
-      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
-      //onParticleEmit:
     });
     const spark3 = this.add.particles(0, 0, "yellow", {
-      //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
-
-      speed: 1600, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
+      speed: 1600,
       frequency: 1300,
       lifespan: 50,
 
-      scale: { start: 0.2, end: 0.8 }, //try single values, growth ones (smokey), and positive to negative which shrinks then grwos
-      //blendMode: "ADD",
-      // angle: { min: 20, max: 60 },
-      // delay: 1000,
-      // gravityX: 200,
-      // gravityY: 1000
-      //moveToX: 100,  //activate both these to have particles sink into a specific point
-      //moveToY: 100,  //activate both these to have particles sink into a specific point
-      //maybe have first touch emit particles, second touch sink them into it
+      scale: { start: 0.2, end: 0.8 },
 
       follow: this.input.activePointer,
       emitting: false,
-
-      // emitCallback: () => synth.triggerAttackRelease("C4", "8n"),
-      //onParticleEmit:
     });
 
     this.input.on("pointerdown", () => {
-      // smoke.emitting = true;
-      // smoke.startFollow(this.input.activePointer);
       ember.emitting = true;
-      ember.startFollow(this.input.activePointer);
+      ember.startFollow(this.input.activePointer, 0, -100);
       downSpark.emitting = true;
-      downSpark.startFollow(this.input.activePointer);
+      downSpark.startFollow(this.input.activePointer, 0, -100);
       downSpark2.emitting = true;
-      downSpark2.startFollow(this.input.activePointer);
+      downSpark2.startFollow(this.input.activePointer, 0, -100);
       spark2.emitting = true;
-      spark2.startFollow(this.input.activePointer);
+      spark2.startFollow(this.input.activePointer, 0, -100);
       spark3.emitting = true;
-      spark3.startFollow(this.input.activePointer);
-      //how to change to another texture?
+      spark3.startFollow(this.input.activePointer, 0, -100);
     });
 
     this.input.on("pointerup", () => {
       smoke.emitting = false;
-      // smoke.explode(1, this.input.activePointer.x, this.input.activePointer.y);
       smoke.stopFollow();
       smokeEnd.explode(
         1,
         this.input.activePointer.x,
-        this.input.activePointer.y
+        this.input.activePointer.y - 100
       );
-      smokeEnd.startFollow(this.input.activePointer);
+      smokeEnd.startFollow(this.input.activePointer - 100);
       ember.emitting = false;
       ember.stopFollow();
       downSpark.emitting = false;
@@ -220,7 +136,7 @@ class Example extends Phaser.Scene {
       downSpark.explode(
         1,
         this.input.activePointer.x,
-        this.input.activePointer.y
+        this.input.activePointer.y - 100
       );
       downSpark2.stopFollow();
       spark2.emitting = false;

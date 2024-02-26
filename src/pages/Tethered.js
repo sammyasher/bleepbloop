@@ -43,7 +43,7 @@ class Scene1 extends Phaser.Scene {
     const squareSide = Math.max(rectangleWidth, rectangleHeight);
     const radius = squareSide / 2;
 
-    // this.Tethered = this.matter.add.rectangle(
+    // this.tethered = this.matter.add.rectangle(
     //   width * 0.5,
     //   height * 0.9,
     //   squareSide,
@@ -51,15 +51,15 @@ class Scene1 extends Phaser.Scene {
     //   { mass: 5 }
     // );
 
-    this.Tethered = this.matter.add.circle(width * 0.5, height * 0.9, radius, {
+    this.tethered = this.matter.add.circle(width * 0.5, height * 0.9, radius, {
       mass: 5,
     });
 
     this.input.on("pointerdown", () => {
       const inputX = this.input.x;
       const inputY = this.input.y;
-      const bigX = this.Tethered.position.x;
-      const bigY = this.Tethered.position.y;
+      const bigX = this.tethered.position.x;
+      const bigY = this.tethered.position.y;
       const xOffset = (inputX - bigX) * 0.1;
       const yOffset = (inputY - bigY) * 0.1;
       const offsetDistance = Math.sqrt(xOffset ** 2 + yOffset ** 2);
@@ -74,7 +74,7 @@ class Scene1 extends Phaser.Scene {
         inputConnector.isStatic = true;
         this.demoSpring = this.matter.add.spring(
           inputConnector,
-          this.Tethered,
+          this.tethered,
           offsetDistance * 3,
           0.02,
           {
@@ -92,7 +92,7 @@ class Scene1 extends Phaser.Scene {
           oscillator: {
             type: "sine",
           },
-          volume: -200 / offsetDistance - 7,
+          volume: -200 / offsetDistance - 5,
           name: "springTone",
         }).toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
 
