@@ -42,7 +42,7 @@ class Scene1 extends Phaser.Scene {
       }
     };
     const rectangleHeight = height * 0.02;
-    const rectangleWidth = rectangleHeight * 3;
+    const rectangleWidth = rectangleHeight * 2.5;
     const rows = Math.floor((height * 0.7) / rectangleHeight);
     const columns = Math.floor((width * 0.3) / rectangleWidth);
 
