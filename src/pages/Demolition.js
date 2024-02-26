@@ -36,7 +36,7 @@ class Scene1 extends Phaser.Scene {
             yPosition - i * yDimension,
             xDimension,
             yDimension,
-            { restitution: 1, friction: 1 }
+            { restitution: 1 }
           );
         }
       }
@@ -60,8 +60,10 @@ class Scene1 extends Phaser.Scene {
       const y = this.input.y;
       const demoWidth = Math.min(width / 10, 65);
 
-      const demoBall = this.matter.add.circle(x - 60, y + 80, demoWidth);
-      const inputTether = this.matter.add.circle(x, y, 15);
+      const demoBall = this.matter.add.circle(x - 60, y + 80, demoWidth, {
+        mass: 1,
+      });
+      const inputTether = this.matter.add.circle(x, y, 15, { mass: 1 });
       this.demoSpring = this.matter.add.spring(
         inputTether,
         demoBall,
