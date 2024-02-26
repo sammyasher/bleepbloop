@@ -1,6 +1,7 @@
 import React from "react";
 import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
+import * as Tone from "tone";
 
 class Scene1 extends Phaser.Scene {
   constructor() {
