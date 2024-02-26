@@ -77,13 +77,15 @@ class Scene1 extends Phaser.Scene {
         );
         const springTone = new Tone.Synth({
           envelope: {
-            release: offsetDistance / 3,
+            attack: 0.02,
+            release: offsetDistance,
             releaseCurve: "linear",
           },
+
           oscillator: {
             type: "sine",
           },
-          volume: -300 / offsetDistance,
+          volume: -300 / offsetDistance - 5,
           name: "springTone",
         }).toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
 
@@ -95,7 +97,7 @@ class Scene1 extends Phaser.Scene {
         const now = Tone.now();
         springTone.triggerAttack(40000 / (offsetDistance * 4), now);
 
-        springTone.triggerRelease(now + 1);
+        springTone.triggerRelease(now + 10);
       }
     });
     this.input.on("pointerup", () => {
