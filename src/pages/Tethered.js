@@ -58,18 +58,6 @@ class Scene1 extends Phaser.Scene {
       const yOffset = (inputY - bigY) * 0.1;
       const offsetDistance = Math.sqrt(xOffset ** 2 + yOffset ** 2);
 
-      console.log(
-        "hello world"
-        //   "xOffset",
-        //   xOffset,
-        //   "yOffset",
-        //   yOffset,
-        //   "squareSide",
-        //   squareSide,
-        //   "offsetDistance",
-        //   offsetDistance
-      );
-
       // const demoBall = this.matter.add.circle(x - 60, y + 80, 50);
       if (
         Math.abs(xOffset) > squareSide / 20 ||
@@ -87,6 +75,10 @@ class Scene1 extends Phaser.Scene {
             pointB: { x: xOffset, y: yOffset },
           }
         );
+        const spring1 = new Tone.Synth().toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
+        const now = Tone.now();
+        spring1.triggerAttack(offsetDistance * 3 + 10, now);
+        spring1.triggerRelease(now + 5, now + 0.5);
       }
     });
     this.input.on("pointerup", () => {
