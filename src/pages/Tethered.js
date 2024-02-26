@@ -72,29 +72,28 @@ class Scene1 extends Phaser.Scene {
           0.02,
           {
             pointA: { x: 0, y: 0 },
-            pointB: { x: xOffset, y: yOffset * 2 },
+            pointB: { x: xOffset * 0.7, y: yOffset },
           }
         );
         const springTone = new Tone.Synth({
           envelope: {
-            release: 1000 / offsetDistance,
+            release: offsetDistance / 3,
             releaseCurve: "linear",
           },
           oscillator: {
             type: "sine",
           },
-          volume: 0 - offsetDistance / 20,
+          volume: -300 / offsetDistance,
           name: "springTone",
         }).toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
 
         const LFOdetune = new Tone.LFO(offsetDistance / 400, -50, 20).start();
         // const lfoVolume = new Tone.LFO(offsetDistance / 30, -100, -10).start();
-        const springVolume = 100 / offsetDistance;
         LFOdetune.connect(springTone.detune);
         // lfoVolume.connect(springTone.volume);
 
         const now = Tone.now();
-        springTone.triggerAttack(offsetDistance * 5 - 25, now);
+        springTone.triggerAttack(40000 / (offsetDistance * 4), now);
 
         springTone.triggerRelease(now + 1);
       }
