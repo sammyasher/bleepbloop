@@ -17,27 +17,6 @@ class Scene1 extends Phaser.Scene {
     const width = this.scale.width;
     const height = this.scale.height;
 
-    const makeRectangles = (
-      rows = 10,
-      columns = 3,
-      xDimension = width / 10,
-      yDimension = height / 18,
-      xPosition = width * 0.5,
-      yPosition = height * 0.5
-    ) => {
-      xDimension = xDimension <= 0 ? 1 : xDimension;
-      yDimension = yDimension <= 0 ? 1 : yDimension;
-      for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < columns; j++) {
-          this.matter.add.rectangle(
-            xPosition - j * xDimension,
-            yPosition - i * yDimension,
-            xDimension,
-            yDimension
-          );
-        }
-      }
-    };
     const rectangleWidth = width * 0.15;
     const rectangleHeight = height * 0.15;
     const squareSide = Math.max(rectangleWidth, rectangleHeight);

@@ -5,7 +5,7 @@ import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
 
 class Scene1 extends Phaser.Scene {
-  constructor() {
+  constructor(scene) {
     super("Scene1");
   }
 
@@ -63,7 +63,6 @@ class Scene1 extends Phaser.Scene {
     //create synth
     const synth = new Tone.Synth(synthConfig).toDestination();
 
-    const LFOdetune = new Tone.LFO(distance / 400, -50, 20).start();
     // LFOdetune.connect(synth.gain);
 
     synth.triggerAttack(6000 / (distance * 0.1));
@@ -95,6 +94,7 @@ class Scene1 extends Phaser.Scene {
 
     clickedTether.synth.gain = 0;
     clickedTether.synth.envelope.release = 5;
+    clickedTether.synth.envelope.releaseCurve = "exponential";
     clickedTether.synth.triggerRelease();
     // clickedTether.synth.dispose();
   }
@@ -125,6 +125,19 @@ class Scene1 extends Phaser.Scene {
     //create tether array
     // this.tethers = [];
 
+    //KEYBOARD EVENTS
+    this.spaceBar = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
+    this.spaceBar.on("down", () => {
+      this.tethers.forEach((tether) => {
+        tether.synth.envelope.release = 5;
+        tether.synth.envelope.releaseCurve = "exponential";
+        tether.synth.triggerRelease();
+        this.matter.world.remove(tether.peg);
+        this.matter.world.remove(tether.spring);
+      });
+    });
     ////ON CLICK EVENTS
     this.input.on("pointerdown", (pointer) => {
       const allPegs = this.tethers
@@ -242,6 +255,7 @@ export const Tethered2 = () => {
   //render gamecomponent
   return (
     <div>
+      <div>Give Spacebar a try?</div>
       <GameComponent config={config} />
     </div>
   );
