@@ -4,9 +4,8 @@ import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
 import {
-  createTether,
+  createBoingTether,
   removeTether,
-  createTethered,
 } from "../helper-functions/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
@@ -67,7 +66,7 @@ class Scene1 extends Phaser.Scene {
         }).length === 0
       ) {
         // pass this.tethered
-        createTether(this, pointer, this.tethered, this);
+        createBoingTether(this, pointer, this.tethered, this);
       }
 
       //if click peg, remove tether
@@ -99,7 +98,7 @@ class Scene1 extends Phaser.Scene {
   }
 }
 
-export const Tethered2 = () => {
+export const BOING = () => {
   //config
   const config = {
     type: Phaser.AUTO,
