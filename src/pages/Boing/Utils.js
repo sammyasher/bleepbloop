@@ -51,8 +51,8 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
     peg,
     tetheredObject,
     distance * 0.2,
-    0.0006,
-    { pointB: { x: offset.x, y: offset.y } }
+    0.0006
+    // { pointB: { x: offset.x, y: offset.y } }
   );
 
   // Synth configuration
