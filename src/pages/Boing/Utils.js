@@ -64,7 +64,7 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
       release: 1,
       releaseCurve: "linear",
     },
-    volume: -800 / distance - 3, // Adjust volume calculation as needed
+    volume: -800 / distance - 1, // Adjust volume calculation as needed
   };
 
   const boingSynthConfig = {
@@ -75,7 +75,7 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
       release: 6,
       releaseCurve: "exponential",
     },
-    volume: -800 / distance - 12, // Adjust volume calculation as needed
+    volume: -800 / distance - 13, // Adjust volume calculation as needed
   };
 
   // Create synth and connect it
