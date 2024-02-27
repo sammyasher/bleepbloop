@@ -15,7 +15,7 @@ import { Glorp } from "../Glorp";
 import { SpringThing } from "../SpringThing";
 import { HyperStimulus } from "../HyperStimulus";
 import { Demolition } from "../Demolition";
-import { Tethered } from "../Tethered";
+import { Tethered } from "../Tethered2";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home" },
