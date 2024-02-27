@@ -4,9 +4,8 @@ import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
 import {
-  createTether,
+  createBoingTether,
   removeTether,
-  createTethered,
 } from "../helper-functions/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
@@ -67,7 +66,7 @@ class Scene1 extends Phaser.Scene {
         }).length === 0
       ) {
         // pass this.tethered
-        createTether(this, pointer, this.tethered, this);
+        createBoingTether(this, pointer, this.tethered, this);
       }
 
       //if click peg, remove tether
@@ -93,13 +92,22 @@ class Scene1 extends Phaser.Scene {
         );
 
         // Update the frequency of the synth
-        tether.synth.detune.value = length / 2;
+        tether.synth.detune.value = -length / 3;
+
+        if (length <= this.radius * 1.2) {
+          tether.synth.envelope.release = 6;
+          tether.synth.envelope.releaseCurve = "exponential";
+          tether.synth.triggerRelease();
+          this.matter.world.remove(tether.peg);
+          this.matter.world.remove(tether.spring);
+          this.tethers = this.tethers.filter((t) => t !== tether);
+        }
       });
     }
   }
 }
 
-export const Tethered2 = () => {
+export const BOING = () => {
   //config
   const config = {
     type: Phaser.AUTO,
