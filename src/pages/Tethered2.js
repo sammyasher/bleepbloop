@@ -7,7 +7,7 @@ import {
   createTether,
   removeTether,
   createTethered,
-} from "../helper-functions/TetherUtils";
+} from "../Utils/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {

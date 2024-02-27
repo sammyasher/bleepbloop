@@ -1,12 +1,10 @@
 import React from "react";
 import Phaser from "phaser";
-import { GameComponent } from "../components/GameComponent";
+import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import {
-  createBoingTether,
-  removeTether,
-} from "../helper-functions/TetherUtils";
+import { createBoingTether } from "./Utils";
+import { removeTether } from "../../Utils/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
@@ -178,7 +176,6 @@ export const BOING = () => {
   //render gamecomponent
   return (
     <div>
-      <div>Give Spacebar a try?</div>
       <GameComponent config={config} />
     </div>
   );

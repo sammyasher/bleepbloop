@@ -2,7 +2,7 @@ import React from "react";
 import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
-import getRandomColor from "../helper-functions/getRandomColor";
+import getRandomColor from "../Utils/getRandomColor";
 
 class Scene1 extends Phaser.Scene {
   constructor() {
@@ -21,14 +21,6 @@ class Scene1 extends Phaser.Scene {
     const rectangleHeight = height * 0.15;
     const squareSide = Math.max(rectangleWidth, rectangleHeight);
     const radius = squareSide / 2;
-
-    // this.tethered = this.matter.add.rectangle(
-    //   width * 0.5,
-    //   height * 0.9,
-    //   squareSide,
-    //   squareSide,
-    //   { mass: 5 }
-    // );
 
     this.tethered = this.matter.add.circle(width * 0.5, height * 0.9, radius, {
       mass: 5,
@@ -73,15 +65,12 @@ class Scene1 extends Phaser.Scene {
           },
           volume: -200 / offsetDistance - 5,
           name: "springTone",
-        }).toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
-
+        }).toDestination();
         const LFOdetune = new Tone.LFO(offsetDistance / 400, -50, 20).start();
 
         LFOdetune.connect(springTone.detune);
         const pan = new Tone.Panner(1).toDestination();
-        // const osc = new Tone.Oscillator(30000 / (offsetDistance * 5), "sine")
-        //   .connect(pan)
-        //   .start();
+
         springTone.connect(pan);
         const now = Tone.now();
 
