@@ -3,79 +3,11 @@ import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
+import createTether from "../helper-functions/createTether";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
     super("Scene1");
-  }
-
-  createTether(pointer, tetheredObject) {
-    //create tethers if not already created
-    if (!this.tethers) {
-      this.tethers = [];
-    }
-    //make peg
-    const peg = this.matter.add.circle(pointer.x, pointer.y, 10, {
-      isStatic: true,
-    });
-
-    //distance and direction of pointer from tethered object
-    const distance = Phaser.Math.Distance.Between(
-      this.tethered.position.x,
-      this.tethered.position.y,
-      pointer.x,
-      pointer.y
-    );
-    let direction = new Phaser.Math.Vector2(
-      pointer.x - tetheredObject.position.x,
-      pointer.y - tetheredObject.position.y
-    );
-    direction.normalize();
-    let fractionOfRadius = 0.3;
-    let radius = this.radius;
-    const offset = direction.scale(
-      Math.min(radius, (tetheredObject.circleRadius * distance) / 1000)
-    );
-
-    //create spring
-    const spring = this.matter.add.spring(
-      peg,
-      tetheredObject,
-      distance * 0.1,
-      0.0005,
-      { pointB: { x: offset.x, y: offset.y } }
-    );
-
-    const synthConfig = {
-      oscillator: {
-        type: "sine",
-      },
-      envelope: {
-        attack: 0.02,
-        // release: distance * 0.1,
-        sustain: 0.3,
-        release: 1,
-        releaseCurve: "linear",
-      },
-      volume: -800 / distance - 5, //better way to scale volume?
-    };
-
-    //create synth
-    const synth = new Tone.Synth(synthConfig).toDestination();
-
-    // LFOdetune.connect(synth.gain);
-
-    synth.triggerAttack(6000 / (distance * 0.1));
-    setTimeout(() => {
-      synth.envelope.release = distance / 10;
-      synth.triggerRelease();
-    }, 10000);
-
-    //create/bundle tether object, store in tether array
-    const tether = { peg, spring, synth };
-    this.tethers.push(tether);
-
-    return tether;
   }
 
   removeTether(allPegs, pointer) {
@@ -152,7 +84,7 @@ class Scene1 extends Phaser.Scene {
         }).length === 0
       ) {
         // pass this.tethered
-        this.createTether(pointer, this.tethered);
+        createTether(this, pointer, this.tethered, this);
       }
 
       //if click peg, remove tether
