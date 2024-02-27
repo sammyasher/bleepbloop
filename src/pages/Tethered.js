@@ -2,125 +2,119 @@ import React from "react";
 import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
-import getRandomColor from "../helper-functions/getRandomColor";
 
 class Scene1 extends Phaser.Scene {
   constructor() {
     super("Scene1");
   }
 
+  createTether(pointer, tetheredObject) {
+    //make peg
+    const peg = this.matter.add.circle(pointer.x, pointer.y, 10, { isStatic: true });
+
+    //distance and direction of pointer from tethered object
+    const distance = Phaser.Math.Distance.Between(this.tethered.position.x, this.tethered.position.y, pointer.x, pointer.y);
+    let direction = new Phaser.Math.Vector2(pointer.x - tetheredObject.position.x, pointer.y - tetheredObject.position.y);
+    direction.normalize();
+    let fractionOfRadius = 0.3;
+    const offset = direction.scale(tetheredObject.circleRadius * fractionOfRadius);
+
+    //create spring
+    const spring = this.matter.add.spring(peg, tetheredObject, distance * .1, 0.0005, { pointB: { x: offset.x, y: offset.y } });
+  
+    const synthConfig = {
+      oscillator: {
+        type: "sine"
+      },
+      envelope: {
+        attack: 0.02,
+        release: distance * .1,
+        releaseCurve: "linear",
+      },
+      volume: -200 / ((distance * .1) - 7) //better way to scale volume? 
+    };
+
+    //create synth
+    const synth = new Tone.Synth(synthConfig).toDestination();
+
+    // const LFOdetune = new Tone.LFO(distance / 400, -50, 20).start();
+    // LFOdetune.connect(synth.detune);  
+    // const pan = new Tone.Panner(1).toDestination();
+    // synth.connect(pan);
+
+    synth.triggerAttackRelease(6000 / (distance * .1), 10);
+    
+    //create/bundle tether object, store in tether array
+    const tether = { peg, spring, synth };
+    this.tethers.push(tether);
+
+    return tether;
+  }
+
+  removeTether(allPegs, pointer) {
+    const clickedPeg = this.matter.query.point(allPegs, { x: pointer.x, y: pointer.y })[0];
+    const clickedTether = this.tethers.find(tether => tether.peg === clickedPeg);
+
+    // Remove tether from array, then remove components from world
+    this.tethers = this.tethers.filter(tether => tether !== clickedTether);
+    this.matter.world.remove(clickedTether.peg);
+    this.matter.world.remove(clickedTether.spring);
+    clickedTether.synth.dispose();
+  }
+
   create() {
-    this.freqScale = 100000;
+    ////PREPARE WORLD
+    //set world bounds, turn on pointer interactivity
     this.matter.world.setBounds();
     this.matter.add.mouseSpring();
 
+    //store canvas dimensions
     const width = this.scale.width;
     const height = this.scale.height;
 
-    const makeRectangles = (
-      rows = 10,
-      columns = 3,
-      xDimension = width / 10,
-      yDimension = height / 18,
-      xPosition = width * 0.5,
-      yPosition = height * 0.5
-    ) => {
-      xDimension = xDimension <= 0 ? 1 : xDimension;
-      yDimension = yDimension <= 0 ? 1 : yDimension;
-      for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < columns; j++) {
-          this.matter.add.rectangle(
-            xPosition - j * xDimension,
-            yPosition - i * yDimension,
-            xDimension,
-            yDimension
-          );
-        }
+    //set tethered object radius based on largest side of canvas
+    const largerSide = Math.max(width, height);
+    const tetheredRadius = largerSide * .075;
+
+    //create tethered object
+    this.tethered = this.matter.add.circle(width * 0.5, height * 0.9, tetheredRadius, { mass: 5 });
+    
+    //create tether array
+    this.tethers = [];
+
+    ////ON CLICK EVENTS
+    this.input.on("pointerdown", (pointer) => {
+      const allPegs = this.tethers.map(tether => tether.peg);
+
+      //if click empty space, create tether
+      if (this.matter.query.point([this.tethered, ...allPegs], { x: pointer.x, y: pointer.y }).length === 0) {  //
+        this.createTether(pointer, this.tethered);
       }
-    };
-    const rectangleWidth = width * 0.15;
-    const rectangleHeight = height * 0.15;
-    const squareSide = Math.max(rectangleWidth, rectangleHeight);
-    const radius = squareSide / 2;
 
-    // this.tethered = this.matter.add.rectangle(
-    //   width * 0.5,
-    //   height * 0.9,
-    //   squareSide,
-    //   squareSide,
-    //   { mass: 5 }
-    // );
-
-    this.tethered = this.matter.add.circle(width * 0.5, height * 0.9, radius, {
-      mass: 5,
-    });
-
-    this.input.on("pointerdown", () => {
-      const inputX = this.input.x;
-      const inputY = this.input.y;
-      const bigX = this.tethered.position.x;
-      const bigY = this.tethered.position.y;
-      const xOffset = (inputX - bigX) * 0.1;
-      const yOffset = (inputY - bigY) * 0.1;
-      const offsetDistance = Math.sqrt(xOffset ** 2 + yOffset ** 2);
-      const randomColor = getRandomColor();
-
-      if (Math.abs(offsetDistance) > squareSide / 20) {
-        const inputConnector = this.matter.add.circle(inputX, inputY, 10, {
-          render: {
-            fillStyle: randomColor,
-          },
-        });
-        inputConnector.isStatic = true;
-        this.demoSpring = this.matter.add.spring(
-          inputConnector,
-          this.tethered,
-          offsetDistance * 3,
-          0.02,
-          {
-            pointA: { x: 0, y: 0 },
-            pointB: { x: xOffset * 0.7, y: yOffset * 0.7 },
-          }
-        );
-        const springTone = new Tone.Synth({
-          envelope: {
-            attack: 0.02,
-            release: offsetDistance,
-            releaseCurve: "linear",
-          },
-
-          oscillator: {
-            type: "sine",
-          },
-          volume: -200 / offsetDistance - 5,
-          name: "springTone",
-        }).toDestination(); //set synth release curve by using Tone.Synth({release: 10}).toDestination();
-
-        const LFOdetune = new Tone.LFO(offsetDistance / 400, -50, 20).start();
-
-        LFOdetune.connect(springTone.detune);
-        const pan = new Tone.Panner(1).toDestination();
-        // const osc = new Tone.Oscillator(30000 / (offsetDistance * 5), "sine")
-        //   .connect(pan)
-        //   .start();
-        springTone.connect(pan);
-        const now = Tone.now();
-
-        springTone.triggerAttack(30000 / (offsetDistance * 5), now);
-
-        springTone.triggerRelease(now + 10);
+      //if click peg, remove tether
+      if (this.matter.query.point(allPegs, { x: pointer.x, y: pointer.y }).length > 0) {
+        //identify clicked peg and tether
+        this.removeTether(allPegs, pointer);
       }
-    });
-    this.input.on("pointerup", () => {
-      this.matter.world.localWorld.bodies.forEach((body) => {
-        if (body.gameObject === undefined) {
-          return;
-        }
-      });
     });
   }
 
-  update() {}
+  update() { 
+    if (this.tethers) {
+      this.tethers.forEach(tether => {
+          // Calculate the length of the spring
+          let length = Phaser.Math.Distance.Between(
+            tether.spring.bodyA.position.x + tether.spring.pointA.x,
+            tether.spring.bodyA.position.y + tether.spring.pointA.y,
+            tether.spring.bodyB.position.x + tether.spring.pointB.x,
+            tether.spring.bodyB.position.y + tether.spring.pointB.y
+          );
+
+          // Update the frequency of the synth
+          tether.synth.frequency.value = 60000 / (length);
+      });
+    }
+  }
 }
 
 export const Tethered = () => {
@@ -129,7 +123,7 @@ export const Tethered = () => {
     type: Phaser.AUTO,
     parent: "phaser-container",
     width: "100%",
-    height: "95%",
+    height: "95%", //why does 100% make it below the fold?
     scene: [Scene1],
     scale: {
       mode: Phaser.Scale.RESIZE,
