@@ -3,32 +3,11 @@ import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import createTether from "../helper-functions/createTether";
+import { createTether, removeTether } from "../helper-functions/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
     super("Scene1");
-  }
-
-  removeTether(allPegs, pointer) {
-    const clickedPeg = this.matter.query.point(allPegs, {
-      x: pointer.x,
-      y: pointer.y,
-    })[0];
-    const clickedTether = this.tethers.find(
-      (tether) => tether.peg === clickedPeg
-    );
-
-    // Remove tether from array, then remove components from world
-    this.tethers = this.tethers.filter((tether) => tether !== clickedTether);
-    this.matter.world.remove(clickedTether.peg);
-    this.matter.world.remove(clickedTether.spring);
-
-    clickedTether.synth.gain = 0;
-    clickedTether.synth.envelope.release = 5;
-    clickedTether.synth.envelope.releaseCurve = "exponential";
-    clickedTether.synth.triggerRelease();
-    // clickedTether.synth.dispose();
   }
 
   create() {
@@ -93,7 +72,7 @@ class Scene1 extends Phaser.Scene {
           .length > 0
       ) {
         //identify clicked peg and tether
-        this.removeTether(allPegs, pointer);
+        removeTether(this, allPegs, pointer);
       }
     });
   }
