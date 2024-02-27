@@ -51,8 +51,8 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
     peg,
     tetheredObject,
     distance * 0.2,
-    0.0006,
-    { pointB: { x: offset.x, y: offset.y } }
+    0.0006
+    // { pointB: { x: offset.x, y: offset.y } }
   );
 
   // Synth configuration
@@ -64,24 +64,38 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
       release: 1,
       releaseCurve: "linear",
     },
-    volume: -800 / distance, // Adjust volume calculation as needed
+    volume: -800 / distance - 1, // Adjust volume calculation as needed
+  };
+
+  const boingSynthConfig = {
+    oscillator: { type: "sine" },
+    envelope: {
+      attack: 0.1,
+      sustain: 0.3,
+      release: 6,
+      releaseCurve: "exponential",
+    },
+    volume: -800 / distance - 13, // Adjust volume calculation as needed
   };
 
   // Create synth and connect it
   const synth = new Tone.Synth(synthConfig).toDestination();
+  const boingSynth = new Tone.Synth(boingSynthConfig).toDestination();
   synth.triggerAttack(12000 / (distance * 0.1));
+  boingSynth.triggerAttack(12000 / (distance * 0.1));
   setTimeout(() => {
-    synth.envelope.release = distance / 10;
     synth.triggerRelease();
-  }, 10000);
+    boingSynth.triggerRelease();
+  }, 3000);
 
   // Store the tether
-  const tether = { peg, spring, synth, distance };
+  const tether = { peg, spring, synth, boingSynth, distance };
   scene.tethers.push(tether);
 
   return tether;
 };
-export const removeTether = (scene, allPegs, pointer) => {
+
+export const removeBoingTether = (scene, allPegs, pointer) => {
   const clickedPeg = scene.matter.query.point(allPegs, {
     x: pointer.x,
     y: pointer.y,
@@ -99,5 +113,6 @@ export const removeTether = (scene, allPegs, pointer) => {
   clickedTether.synth.envelope.release = 5;
   clickedTether.synth.envelope.releaseCurve = "exponential";
   clickedTether.synth.triggerRelease();
+  clickedTether.boingSynth.triggerRelease();
   // clickedTether.synth.dispose();
 };
