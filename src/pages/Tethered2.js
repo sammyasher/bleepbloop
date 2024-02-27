@@ -255,6 +255,7 @@ export const Tethered2 = () => {
   //render gamecomponent
   return (
     <div>
+      <div>Give Spacebar a try?</div>
       <GameComponent config={config} />
     </div>
   );
