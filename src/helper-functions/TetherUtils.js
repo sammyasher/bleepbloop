@@ -142,8 +142,8 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
   const spring = scene.matter.add.spring(
     peg,
     tetheredObject,
-    distance * 0.1,
-    0.0005,
+    distance * 0.2,
+    0.0008,
     { pointB: { x: offset.x, y: offset.y } }
   );
 
@@ -156,12 +156,12 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
       release: 1,
       releaseCurve: "linear",
     },
-    volume: -800 / distance - 5, // Adjust volume calculation as needed
+    volume: -800 / distance, // Adjust volume calculation as needed
   };
 
   // Create synth and connect it
   const synth = new Tone.Synth(synthConfig).toDestination();
-  synth.triggerAttack(6000 / (distance * 0.1));
+  synth.triggerAttack(12000 / (distance * 0.1));
   setTimeout(() => {
     synth.envelope.release = distance / 10;
     synth.triggerRelease();

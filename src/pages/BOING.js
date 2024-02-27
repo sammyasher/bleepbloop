@@ -33,7 +33,7 @@ class Scene1 extends Phaser.Scene {
       width * 0.5,
       height * 0.9,
       tetheredRadius,
-      { density: 10, restitution: 0.7, friction: 0.01 }
+      { density: 10, restitution: 0.7, friction: 0.01, frictionAir: 0.0 }
     );
 
     //create tether array
@@ -92,7 +92,7 @@ class Scene1 extends Phaser.Scene {
         );
 
         // Update the frequency of the synth
-        tether.synth.detune.value = -length / 3;
+        tether.synth.detune.value = -length;
 
         if (length <= this.radius * 1.2) {
           tether.synth.envelope.release = 6;
