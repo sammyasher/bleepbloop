@@ -1,12 +1,10 @@
 import React from "react";
 import Phaser from "phaser";
-import { GameComponent } from "../components/GameComponent";
+import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import {
-  createBoingTether,
-  removeTether,
-} from "../helper-functions/TetherUtils";
+import { createBoingTether } from "./Utils";
+import { removeTether } from "../../Utils/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
@@ -33,7 +31,7 @@ class Scene1 extends Phaser.Scene {
       width * 0.5,
       height * 0.9,
       tetheredRadius,
-      { mass: 5 }
+      { density: 10, restitution: 0.7, friction: 0.01, frictionAir: 0.0 }
     );
 
     //create tether array
@@ -92,7 +90,7 @@ class Scene1 extends Phaser.Scene {
         );
 
         // Update the frequency of the synth
-        tether.synth.detune.value = -length / 3;
+        tether.synth.detune.value = -length;
 
         if (length <= this.radius * 1.2) {
           tether.synth.envelope.release = 6;
@@ -178,7 +176,6 @@ export const BOING = () => {
   //render gamecomponent
   return (
     <div>
-      <div>Give Spacebar a try?</div>
       <GameComponent config={config} />
     </div>
   );

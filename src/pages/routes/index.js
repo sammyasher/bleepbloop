@@ -17,7 +17,7 @@ import { HyperStimulus } from "../HyperStimulus";
 import { Demolition } from "../Demolition";
 import { Tethered2 } from "../Tethered2";
 import { Tethered } from "../Tethered";
-import { BOING } from "../BOING";
+import { BOING } from "../Boing/Boing";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home" },
