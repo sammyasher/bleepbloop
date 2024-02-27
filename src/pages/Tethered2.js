@@ -171,7 +171,7 @@ class Scene1 extends Phaser.Scene {
   }
 }
 
-export const Tethered = () => {
+export const Tethered2 = () => {
   //config
   const config = {
     type: Phaser.AUTO,
