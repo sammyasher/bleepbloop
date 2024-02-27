@@ -139,7 +139,7 @@ class Scene1 extends Phaser.Scene {
         }).length === 0
       ) {
         // pass this.tethered
-        this.createTether(pointer, this.tethered || []);
+        this.createTether(pointer, this.tethered);
       }
 
       //if click peg, remove tether
