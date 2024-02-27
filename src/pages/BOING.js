@@ -33,7 +33,7 @@ class Scene1 extends Phaser.Scene {
       width * 0.5,
       height * 0.9,
       tetheredRadius,
-      { mass: 5 }
+      { density: 10, restitution: 0.7, friction: 0.01 }
     );
 
     //create tether array
