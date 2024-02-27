@@ -3,8 +3,7 @@ import Phaser from "phaser";
 import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import { createBoingTether } from "./Utils";
-import { removeTether } from "../../Utils/TetherUtils";
+import { createBoingTether, removeBoingTether } from "./Utils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
@@ -46,6 +45,7 @@ class Scene1 extends Phaser.Scene {
         tether.synth.envelope.release = 5;
         tether.synth.envelope.releaseCurve = "exponential";
         tether.synth.triggerRelease();
+        tether.boingSynth.triggerRelease();
         this.matter.world.remove(tether.peg);
         this.matter.world.remove(tether.spring);
       });
@@ -73,7 +73,7 @@ class Scene1 extends Phaser.Scene {
           .length > 0
       ) {
         //identify clicked peg and tether
-        removeTether(this, allPegs, pointer);
+        removeBoingTether(this, allPegs, pointer);
       }
     });
   }
@@ -90,12 +90,13 @@ class Scene1 extends Phaser.Scene {
         );
 
         // Update the frequency of the synth
-        tether.synth.detune.value = -length;
+        tether.synth.detune.value = -length / 2;
 
         if (length <= this.radius * 1.4) {
           tether.synth.envelope.release = 6;
           tether.synth.envelope.releaseCurve = "exponential";
           tether.synth.triggerRelease();
+          tether.boingSynth.triggerRelease();
           this.matter.world.remove(tether.peg);
           this.matter.world.remove(tether.spring);
           this.tethers = this.tethers.filter((t) => t !== tether);
