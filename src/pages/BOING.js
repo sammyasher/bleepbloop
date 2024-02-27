@@ -92,7 +92,16 @@ class Scene1 extends Phaser.Scene {
         );
 
         // Update the frequency of the synth
-        tether.synth.detune.value = length / 2;
+        tether.synth.detune.value = -length / 3;
+
+        if (length <= this.radius * 1.2) {
+          tether.synth.envelope.release = 6;
+          tether.synth.envelope.releaseCurve = "exponential";
+          tether.synth.triggerRelease();
+          this.matter.world.remove(tether.peg);
+          this.matter.world.remove(tether.spring);
+          this.tethers = this.tethers.filter((t) => t !== tether);
+        }
       });
     }
   }
