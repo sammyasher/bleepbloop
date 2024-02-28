@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import * as Tone from "tone";
+import { removeTether } from "../../Utils/TetherUtils";
 
 export const createBoingTether = (scene, pointer, tetheredObject) => {
   if (scene.tethers) {
@@ -95,7 +96,13 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
   return tether;
 };
 
-export const removeBoingTether = (scene, allPegs, pointer) => {
+// export const removeTether = (scene, tether) => {
+//   scene.tethers = scene.tethers.filter((t) => t !== tether);
+//   scene.matter.world.remove(tether.peg);
+//   scene.matter.world.remove(tether.spring);
+// };
+
+export const clickRemoveBoingTether = (scene, allPegs, pointer) => {
   const clickedPeg = scene.matter.query.point(allPegs, {
     x: pointer.x,
     y: pointer.y,
@@ -105,9 +112,10 @@ export const removeBoingTether = (scene, allPegs, pointer) => {
   );
 
   // Remove tether from array, then remove components from world
-  scene.tethers = scene.tethers.filter((tether) => tether !== clickedTether);
-  scene.matter.world.remove(clickedTether.peg);
-  scene.matter.world.remove(clickedTether.spring);
+  // scene.tethers = scene.tethers.filter((tether) => tether !== clickedTether);
+  // scene.matter.world.remove(clickedTether.peg);
+  // scene.matter.world.remove(clickedTether.spring);
+  removeTether(scene, clickedTether);
 
   clickedTether.synth.gain = 0;
   clickedTether.synth.envelope.release = 5;
