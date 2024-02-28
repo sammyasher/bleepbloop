@@ -3,11 +3,7 @@ import Phaser from "phaser";
 import { GameComponent } from "../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import {
-  createTether,
-  removeTether,
-  createTethered,
-} from "../Utils/TetherUtils";
+import { createTether, clickRemoveTether } from "../Utils/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
@@ -76,7 +72,7 @@ class Scene1 extends Phaser.Scene {
           .length > 0
       ) {
         //identify clicked peg and tether
-        removeTether(this, allPegs, pointer);
+        clickRemoveTether(this, allPegs, pointer);
       }
     });
   }

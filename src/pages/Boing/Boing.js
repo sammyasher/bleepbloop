@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import { createBoingTether, removeBoingTether } from "./Utils";
+import { createBoingTether, clickRemoveBoingTether } from "./Utils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
@@ -73,7 +73,7 @@ class Scene1 extends Phaser.Scene {
           .length > 0
       ) {
         //identify clicked peg and tether
-        removeBoingTether(this, allPegs, pointer);
+        clickRemoveBoingTether(this, allPegs, pointer);
       }
     });
   }
