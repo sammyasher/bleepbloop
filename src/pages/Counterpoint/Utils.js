@@ -1,55 +1,52 @@
 import Phaser from "phaser";
 import * as Tone from "tone";
 
-export const createBoingTether = (scene, pointer, tetheredObject) => {
-  if (scene.tethers) {
-    scene.tethers.forEach((tether) => {
-      tether.synth.envelope.release = 5;
-      tether.synth.envelope.releaseCurve = "exponential";
-      tether.synth.triggerRelease();
-      scene.matter.world.remove(tether.peg);
-      scene.matter.world.remove(tether.spring);
-    });
-  }
-  // Ensure tethers array exists
-  //requires scene.tethered to be defined
+export const createCounterpointTether = (scene, x, y) => {
+  const anchor = scene.anchor;
   if (!scene.tethers) {
     scene.tethers = [];
   }
 
+  while (scene.tethers.length > 1) {
+    const originalTether = scene.tethers[0];
+    removeTether(scene, originalTether);
+    // scene.tethers.shift();
+    console.log(scene);
+  }
+
   // Create a static peg
-  const peg = scene.matter.add.circle(pointer.x, pointer.y, 10, {
+  const peg = scene.matter.add.circle(x, y, 10, {
     isStatic: true,
   });
 
   // Calculate distance and direction
-  if (!scene.tethered || typeof scene.radius === "undefined") {
-    console.error("scene.tethered or scene.radius is not defined");
+  if (!anchor || typeof scene.radius === "undefined") {
+    console.error("anchor or scene.radius is not defined");
     return;
   }
 
   const distance = Phaser.Math.Distance.Between(
-    scene.tethered.position.x,
-    scene.tethered.position.y,
-    pointer.x,
-    pointer.y
+    anchor.position.x,
+    anchor.position.y,
+    x,
+    y
   );
 
   let direction = new Phaser.Math.Vector2(
-    pointer.x - tetheredObject.position.x,
-    pointer.y - tetheredObject.position.y
+    x - anchor.position.x,
+    y - anchor.position.y
   ).normalize();
 
   const offsetDistance = Math.min(
     scene.radius,
-    (tetheredObject.circleRadius * distance) / 1000
+    (anchor.circleRadius * distance) / 1000
   );
   const offset = direction.scale(offsetDistance);
 
   // Create a spring
   const spring = scene.matter.add.spring(
     peg,
-    tetheredObject,
+    anchor,
     distance * 0.2,
     0.0006
     // { pointB: { x: offset.x, y: offset.y } }
@@ -64,7 +61,8 @@ export const createBoingTether = (scene, pointer, tetheredObject) => {
       release: 1,
       releaseCurve: "linear",
     },
-    volume: -800 / distance - 1, // Adjust volume calculation as needed
+
+    volume: -800 / distance - 3, // Adjust volume calculation as needed
   };
 
   const boingSynthConfig = {
@@ -101,7 +99,7 @@ const removeTether = (scene, tether) => {
   scene.matter.world.remove(tether.spring);
 };
 
-export const clickRemoveBoingTether = (scene, allPegs, pointer) => {
+export const clickRemoveCounterpointTether = (scene, allPegs, pointer) => {
   const clickedPeg = scene.matter.query.point(allPegs, {
     x: pointer.x,
     y: pointer.y,
@@ -110,10 +108,6 @@ export const clickRemoveBoingTether = (scene, allPegs, pointer) => {
     (tether) => tether.peg === clickedPeg
   );
 
-  // Remove tether from array, then remove components from world
-  // scene.tethers = scene.tethers.filter((tether) => tether !== clickedTether);
-  // scene.matter.world.remove(clickedTether.peg);
-  // scene.matter.world.remove(clickedTether.spring);
   removeTether(scene, clickedTether);
 
   clickedTether.synth.gain = 0;
@@ -122,4 +116,20 @@ export const clickRemoveBoingTether = (scene, allPegs, pointer) => {
   clickedTether.synth.triggerRelease();
   clickedTether.boingSynth.triggerRelease();
   // clickedTether.synth.dispose();
+};
+
+export const removeTethersOnSpace = (scene) => {
+  scene.spaceBar = scene.input.keyboard.addKey(
+    Phaser.Input.Keyboard.KeyCodes.SPACE
+  );
+  scene.spaceBar.on("down", () => {
+    scene.tethers.forEach((tether) => {
+      tether.synth.envelope.release = 5;
+      tether.synth.envelope.releaseCurve = "exponential";
+      tether.synth.triggerRelease();
+      tether.boingSynth.triggerRelease();
+      scene.matter.world.remove(tether.peg);
+      scene.matter.world.remove(tether.spring);
+    });
+  });
 };

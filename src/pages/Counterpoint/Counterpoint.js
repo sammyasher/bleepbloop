@@ -3,7 +3,11 @@ import Phaser from "phaser";
 import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import { createBoingTether, removeBoingTether } from "../Boing/Utils";
+import {
+  createCounterpointTether,
+  clickRemoveCounterpointTether,
+  removeTethersOnSpace,
+} from "./Utils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
@@ -15,6 +19,7 @@ class Scene1 extends Phaser.Scene {
     //set world bounds, turn on pointer interactivity
     this.matter.world.setBounds();
     this.matter.add.mouseSpring();
+    this.isCounterpoint = true;
 
     //store canvas dimensions
     const width = this.scale.width;
@@ -26,30 +31,20 @@ class Scene1 extends Phaser.Scene {
     this.radius = tetheredRadius;
 
     // create tethered object
-    this.tethered = this.matter.add.circle(
+    this.anchor = this.matter.add.circle(
       width * 0.5,
       height * 0.9,
       tetheredRadius,
       { density: 10, restitution: 0.7, friction: 0.01, frictionAir: 0.0 }
     );
 
-    //create tether array
-    // this.tethers = [];
+    //create initial tether
+    createCounterpointTether(this, width / 2, height / 4);
 
     //KEYBOARD EVENTS
-    this.spaceBar = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
-    this.spaceBar.on("down", () => {
-      this.tethers.forEach((tether) => {
-        tether.synth.envelope.release = 5;
-        tether.synth.envelope.releaseCurve = "exponential";
-        tether.synth.triggerRelease();
-        tether.boingSynth.triggerRelease();
-        this.matter.world.remove(tether.peg);
-        this.matter.world.remove(tether.spring);
-      });
-    });
+
+    removeTethersOnSpace(this);
+
     ////ON CLICK EVENTS
     this.input.on("pointerdown", (pointer) => {
       const allPegs = this.tethers
@@ -58,13 +53,13 @@ class Scene1 extends Phaser.Scene {
 
       //if click empty space, create tether
       if (
-        this.matter.query.point([this.tethered, ...allPegs], {
+        this.matter.query.point([this.anchor, ...allPegs], {
           x: pointer.x,
           y: pointer.y,
         }).length === 0
       ) {
-        // pass this.tethered
-        createBoingTether(this, pointer, this.tethered, this);
+        // pass this.anchor
+        createCounterpointTether(this, pointer.x, pointer.y);
       }
 
       //if click peg, remove tether
@@ -73,7 +68,7 @@ class Scene1 extends Phaser.Scene {
           .length > 0
       ) {
         //identify clicked peg and tether
-        removeBoingTether(this, allPegs, pointer);
+        clickRemoveCounterpointTether(this, allPegs, pointer);
       }
     });
   }
@@ -92,21 +87,21 @@ class Scene1 extends Phaser.Scene {
         // Update the frequency of the synth
         tether.synth.detune.value = -length / 2;
 
-        if (length <= this.radius * 1.4) {
-          tether.synth.envelope.release = 6;
-          tether.synth.envelope.releaseCurve = "exponential";
-          tether.synth.triggerRelease();
-          tether.boingSynth.triggerRelease();
-          this.matter.world.remove(tether.peg);
-          this.matter.world.remove(tether.spring);
-          this.tethers = this.tethers.filter((t) => t !== tether);
-        }
+        // if (length <= this.radius * 1.4) {
+        //   tether.synth.envelope.release = 6;
+        //   tether.synth.envelope.releaseCurve = "exponential";
+        //   tether.synth.triggerRelease();
+        //   tether.boingSynth.triggerRelease();
+        //   this.matter.world.remove(tether.peg);
+        //   this.matter.world.remove(tether.spring);
+        //   this.tethers = this.tethers.filter((t) => t !== tether);
+        // }
       });
     }
   }
 }
 
-export const CounterPoint = () => {
+export const Counterpoint = () => {
   //config
   const config = {
     type: Phaser.AUTO,
