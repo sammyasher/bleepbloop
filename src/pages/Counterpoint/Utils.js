@@ -16,11 +16,16 @@ export const createCounterpointTether = (scene, x, y, pointer) => {
     scene.tethers = [];
   }
 
-  while (scene.tethers.length > 1) {
-    const originalTether = scene.tethers[0];
-    removeTether(scene, originalTether);
-    // scene.tethers.shift();
-  }
+  // while (scene.tethers.length > 1) {
+  //   const originalTether = scene.tethers[0];
+  //   removeTether(scene, originalTether);
+  //   // scene.tethers.shift();
+  // }
+  scene.tethers.forEach((tether) => {
+    if (tether.isCounterpoint === isCounterpoint) {
+      removeTether(scene, tether);
+    }
+  });
 
   // Create a static peg
   const peg = scene.matter.add.circle(x, y, 10, {
@@ -52,11 +57,17 @@ export const createCounterpointTether = (scene, x, y, pointer) => {
   const offset = direction.scale(offsetDistance);
 
   // Create a spring
-  const spring = scene.matter.add.spring(peg, anchor, distance * 0.2, 0.0006, {
-    render: {
-      type: isCounterpoint ? "line" : "spring",
-    },
-  });
+  const spring = isCounterpoint
+    ? scene.matter.add.spring(peg, anchor, distance * 0.2, 0.001, {
+        render: {
+          type: "line",
+        },
+      })
+    : scene.matter.add.spring(peg, anchor, distance * 0.4, 0.0003, {
+        render: {
+          type: "spring",
+        },
+      });
 
   // Synth configuration
   const pointSynthConfig = {
@@ -83,18 +94,15 @@ export const createCounterpointTether = (scene, x, y, pointer) => {
   };
 
   const pointFrequency = 12000 / (distance * 0.1);
-  const counterpointFrequency = 5000 / (distance * 0.1);
+  const counterpointFrequency = 6000 / (distance * 0.1);
 
   // Create synth and connect it
   const synth = new Tone.Synth(
     isCounterpoint ? pointSynthConfig : counterpointSynthConfig
   ).toDestination();
-  // const boingSynth = new Tone.Synth(boingSynthConfig).toDestination();
   synth.triggerAttack(isCounterpoint ? pointFrequency : counterpointFrequency);
-  // boingSynth.triggerAttack(12000 / (distance * 0.1));
   setTimeout(() => {
     synth.triggerRelease();
-    // boingSynth.triggerRelease();
   }, 3000);
 
   // Store the tether
@@ -138,7 +146,6 @@ export const removeTethersOnSpace = (scene) => {
       tether.synth.envelope.release = 5;
       tether.synth.envelope.releaseCurve = "exponential";
       tether.synth.triggerRelease();
-      tether.boingSynth.triggerRelease();
       scene.matter.world.remove(tether.peg);
       scene.matter.world.remove(tether.spring);
     });
