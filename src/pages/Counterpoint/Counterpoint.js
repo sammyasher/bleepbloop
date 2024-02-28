@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Phaser from "phaser";
 import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
@@ -59,7 +59,7 @@ class Scene1 extends Phaser.Scene {
         }).length === 0
       ) {
         // pass this.anchor
-        createCounterpointTether(this, pointer.x, pointer.y);
+        createCounterpointTether(this, pointer.x, pointer.y, pointer);
       }
 
       //if click peg, remove tether
@@ -93,16 +93,6 @@ class Scene1 extends Phaser.Scene {
 
         // Update the frequency of the synth
         tether.synth.detune.value = -length / 2;
-
-        // if (length <= this.radius * 1.4) {
-        //   tether.synth.envelope.release = 6;
-        //   tether.synth.envelope.releaseCurve = "exponential";
-        //   tether.synth.triggerRelease();
-        //   tether.boingSynth.triggerRelease();
-        //   this.matter.world.remove(tether.peg);
-        //   this.matter.world.remove(tether.spring);
-        //   this.tethers = this.tethers.filter((t) => t !== tether);
-        // }
       });
     }
   }
@@ -129,6 +119,15 @@ export const Counterpoint = () => {
     },
   };
 
+  useEffect(() => {
+    const handleRightClick = (e) => {
+      e.preventDefault();
+    };
+    document.addEventListener("contextmenu", handleRightClick);
+    return () => {
+      document.removeEventListener("contextmenu", handleRightClick);
+    };
+  }, []);
   //render gamecomponent
   return (
     <div>

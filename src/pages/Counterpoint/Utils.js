@@ -3,9 +3,15 @@ import * as Tone from "tone";
 
 //defining feature: will have up to, but not more than 2 tethers at a time
 
-export const createCounterpointTether = (scene, x, y) => {
+export const createCounterpointTether = (scene, x, y, pointer) => {
   const anchor = scene.anchor;
-  const isCounterpoint = scene.isCounterpoint;
+  console.log(pointer);
+  let isCounterpoint = true;
+  if (pointer && pointer.button === 2) {
+    console.log("RIGHT CLICK");
+    isCounterpoint = false;
+  }
+
   if (!scene.tethers) {
     scene.tethers = [];
   }
@@ -14,7 +20,6 @@ export const createCounterpointTether = (scene, x, y) => {
     const originalTether = scene.tethers[0];
     removeTether(scene, originalTether);
     // scene.tethers.shift();
-    console.log(scene);
   }
 
   // Create a static peg
@@ -47,23 +52,14 @@ export const createCounterpointTether = (scene, x, y) => {
   const offset = direction.scale(offsetDistance);
 
   // Create a spring
-  const spring = scene.matter.add.spring(
-    peg,
-    anchor,
-    distance * 0.2,
-    0.0006,
-    {
-      render: {
-        type: isCounterpoint ? "line" : "spring",
-      },
-    }
-
-    // { pointB: { x: offset.x, y: offset.y } }
-    // { type: isCounterpoint ? "spring" : "line" }
-  );
+  const spring = scene.matter.add.spring(peg, anchor, distance * 0.2, 0.0006, {
+    render: {
+      type: isCounterpoint ? "line" : "spring",
+    },
+  });
 
   // Synth configuration
-  const synthConfig = {
+  const pointSynthConfig = {
     oscillator: { type: "sine" },
     envelope: {
       attack: 0.03,
@@ -74,32 +70,36 @@ export const createCounterpointTether = (scene, x, y) => {
 
     volume: -800 / distance - 3, // Adjust volume calculation as needed
   };
-
-  const boingSynthConfig = {
+  const counterpointSynthConfig = {
     oscillator: { type: "sine" },
     envelope: {
-      attack: 0.1,
+      attack: 0.08,
       sustain: 0.3,
-      release: 6,
-      releaseCurve: "exponential",
+      release: 2,
+      releaseCurve: "linear",
     },
-    volume: -800 / distance - 13, // Adjust volume calculation as needed
+
+    volume: -800 / distance - 3, // Adjust volume calculation as needed
   };
 
+  const pointFrequency = 12000 / (distance * 0.1);
+  const counterpointFrequency = 5000 / (distance * 0.1);
+
   // Create synth and connect it
-  const synth = new Tone.Synth(synthConfig).toDestination();
-  const boingSynth = new Tone.Synth(boingSynthConfig).toDestination();
-  synth.triggerAttack(12000 / (distance * 0.1));
-  boingSynth.triggerAttack(12000 / (distance * 0.1));
+  const synth = new Tone.Synth(
+    isCounterpoint ? pointSynthConfig : counterpointSynthConfig
+  ).toDestination();
+  // const boingSynth = new Tone.Synth(boingSynthConfig).toDestination();
+  synth.triggerAttack(isCounterpoint ? pointFrequency : counterpointFrequency);
+  // boingSynth.triggerAttack(12000 / (distance * 0.1));
   setTimeout(() => {
     synth.triggerRelease();
-    boingSynth.triggerRelease();
+    // boingSynth.triggerRelease();
   }, 3000);
 
   // Store the tether
-  const tether = { peg, spring, synth, boingSynth, distance };
+  const tether = { peg, spring, synth, isCounterpoint, distance };
   scene.tethers.push(tether);
-  scene.isCounterpoint = !isCounterpoint;
 
   return tether;
 };
