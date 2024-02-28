@@ -3,11 +3,8 @@ import Phaser from "phaser";
 import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
-import {
-  createCounterpointTether,
-  removeTether,
-  removeTethersOnSpace,
-} from "./Utils";
+import { createCounterpointTether, removeTethersOnSpace } from "./Utils";
+import { removeTether } from "../../Utils/TetherUtils";
 
 class Scene1 extends Phaser.Scene {
   constructor(scene) {

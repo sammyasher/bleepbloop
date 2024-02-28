@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import * as Tone from "tone";
+import { removeTether } from "../../Utils/TetherUtils";
 
 //defining feature: will have up to, but not more than 2 tethers at a time
 
@@ -112,11 +113,11 @@ export const createCounterpointTether = (scene, x, y, pointer) => {
   return tether;
 };
 
-export const removeTether = (scene, tether) => {
-  scene.tethers = scene.tethers.filter((t) => t !== tether);
-  scene.matter.world.remove(tether.peg);
-  scene.matter.world.remove(tether.spring);
-};
+// export const removeTether = (scene, tether) => {
+//   scene.tethers = scene.tethers.filter((t) => t !== tether);
+//   scene.matter.world.remove(tether.peg);
+//   scene.matter.world.remove(tether.spring);
+// };
 
 export const clickRemoveCounterpointTether = (scene, allPegs, pointer) => {
   const clickedPeg = scene.matter.query.point(allPegs, {
