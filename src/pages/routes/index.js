@@ -18,6 +18,7 @@ import { Demolition } from "../Demolition";
 import { Tethered2 } from "../Tethered2";
 import { Tethered } from "../Tethered";
 import { BOING } from "../Boing/Boing";
+import { CounterPoint } from "../Counterpoint/Counterpoint";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home" },
@@ -101,6 +102,12 @@ const paths = [
     element: <BOING />,
     includeInNav: true,
     name: "BOING",
+  },
+  {
+    to: "/counterpoint",
+    element: <CounterPoint />,
+    includeInNav: true,
+    name: "CounterPoint",
   },
 ];
 
