@@ -5,7 +5,7 @@ import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
 import {
   createCounterpointTether,
-  clickRemoveCounterpointTether,
+  removeTether,
   removeTethersOnSpace,
 } from "./Utils";
 
@@ -68,7 +68,14 @@ class Scene1 extends Phaser.Scene {
           .length > 0
       ) {
         //identify clicked peg and tether
-        clickRemoveCounterpointTether(this, allPegs, pointer);
+        const clickedPeg = this.matter.query.point(allPegs, {
+          x: pointer.x,
+          y: pointer.y,
+        })[0];
+        const clickedTether = this.tethers.find(
+          (tether) => tether.peg === clickedPeg
+        );
+        removeTether(this, clickedTether);
       }
     });
   }

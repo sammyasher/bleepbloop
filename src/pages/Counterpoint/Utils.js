@@ -1,8 +1,11 @@
 import Phaser from "phaser";
 import * as Tone from "tone";
 
+//defining feature: will have up to, but not more than 2 tethers at a time
+
 export const createCounterpointTether = (scene, x, y) => {
   const anchor = scene.anchor;
+  const isCounterpoint = scene.isCounterpoint;
   if (!scene.tethers) {
     scene.tethers = [];
   }
@@ -48,8 +51,15 @@ export const createCounterpointTether = (scene, x, y) => {
     peg,
     anchor,
     distance * 0.2,
-    0.0006
+    0.0006,
+    {
+      render: {
+        type: isCounterpoint ? "line" : "spring",
+      },
+    }
+
     // { pointB: { x: offset.x, y: offset.y } }
+    // { type: isCounterpoint ? "spring" : "line" }
   );
 
   // Synth configuration
@@ -89,11 +99,12 @@ export const createCounterpointTether = (scene, x, y) => {
   // Store the tether
   const tether = { peg, spring, synth, boingSynth, distance };
   scene.tethers.push(tether);
+  scene.isCounterpoint = !isCounterpoint;
 
   return tether;
 };
 
-const removeTether = (scene, tether) => {
+export const removeTether = (scene, tether) => {
   scene.tethers = scene.tethers.filter((t) => t !== tether);
   scene.matter.world.remove(tether.peg);
   scene.matter.world.remove(tether.spring);
