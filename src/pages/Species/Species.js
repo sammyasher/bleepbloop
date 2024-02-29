@@ -25,8 +25,8 @@ class Scene1 extends Phaser.Scene {
 
         // create spider
         
-        for (let i = 0; i < 2; i++) {
-            let PoofPuff = new Make.PoofPuff(this, undefined, undefined, Math.random() * this.scale.width, Math.random() * this.scale.height);  //how to set one of the parameters to its default value? b
+        for (let i = 0; i < 3; i++) {
+            let PoofPuff = new Make.PoofPuff(this, undefined, .6, Math.random() * this.scale.width, Math.random() * this.scale.height);  //how to set one of the parameters to its default value? b
         }
 
        

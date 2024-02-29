@@ -101,21 +101,28 @@ export class Whirlygig2 {
 }
 
 export class PoofPuff { 
-    constructor(scene, number = 30, bodyRadius = .02 * Math.max(scene.scale.width, scene.scale.height), x, y) {
+    constructor(scene, number = 30, scale = 1 , x, y) {
         if (!this.PoofPuffs) {
             scene.PoofPuffs = [];
         }
-
+        this.bodyRadius = scale * .02 * Math.max(scene.scale.width, scene.scale.height);
         this.pin = scene.matter.add.circle(x, y, 0, { isStatic: true });  
         this.poofStalks = [];
 
         for (let i = 0; i < number; i++) {
-            let body = scene.matter.add.circle(this.pin.position.x + bodyRadius * 10, this.pin.position.y + bodyRadius, bodyRadius, {friction: 0, frictionAir: 0, ignoreGravity: true });//create body random place. to make frictionless, add {friction: 0, frictionAir: 0}     
-            let stalk = scene.matter.add.constraint(body, this.pin, bodyRadius * 10, .05, { damping: 0.0001 }); //create leg at 150 degrees from center
+            let body = scene.matter.add.circle(this.pin.position.x + this.bodyRadius * 10, this.pin.position.y + this.bodyRadius, this.bodyRadius, {friction: 0, frictionAir: 0, ignoreGravity: true });//create body random place. to make frictionless, add {friction: 0, frictionAir: 0}     
+            let stalk = scene.matter.add.constraint(body, this.pin, this.bodyRadius * 10, .05, { damping: 0.0001 }); //create leg at 150 degrees from center
             scene.matter.body.setVelocity(body, { x: (Math.random() * 10) + 5, y: (Math.random() * 10) + 5 });
             this.poofStalks.push({ body: body, stalk: stalk });
         }
     }
+
+    //Future Iterations
+    // poofbodies can be tapped to explode/emitter/poof (and destroy stalk/constraint)
+    // sound associated with poof tap, or general velocity of whole thing. spin velocity
+    // 2 layers of radius
+    //make scaleable from constructor argument 
+
 }
 
 export class Orbiter { 
