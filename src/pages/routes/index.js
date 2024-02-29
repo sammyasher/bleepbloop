@@ -19,6 +19,7 @@ import { Tethered2 } from "../Tethered2";
 import { Tethered } from "../Tethered";
 import { BOING } from "../Boing/Boing";
 import { Counterpoint } from "../Counterpoint/Counterpoint";
+import { Species } from "../Species/Species";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home" },
@@ -109,6 +110,13 @@ const paths = [
     includeInNav: true,
     name: "Counterpoint",
   },
+  {
+    to: "/Species",
+    element: <Species />,
+    includeInNav: false,
+    name: "Species",
+  },
+
 ];
 
 const Dropdown = () => {
