@@ -1,3 +1,4 @@
+import { getByPlaceholderText } from "@testing-library/react";
 import Phaser from "phaser";
 import * as Tone from "tone";
 
@@ -45,38 +46,38 @@ export class Spider {
     }
 }
 
-// export class Dangler { 
-//     constructor(scene) {
-//         if (!this.spiders) {
-//             scene.spiders = [];
-//         }
+export class Dangler { 
+    constructor(scene) {
+        if (!this.spiders) {
+            scene.spiders = [];
+        }
 
-//         this.bodyRadius = .1 * Math.max(scene.scale.width, scene.scale.height); //body radius fraction of longest canvas size
-//         this.body = scene.matter.add.circle(Math.random() * scene.scale.width, Math.random() * scene.scale.height, this.bodyRadius * .2);//create body random place
-//         this.legs = [];  
-//         this.createLegs(scene);
-//         // tones for the
-//     }
+        this.bodyRadius = .1 * Math.max(scene.scale.width, scene.scale.height); //body radius fraction of longest canvas size
+        this.body = scene.matter.add.circle(Math.random() * scene.scale.width, Math.random() * scene.scale.height, this.bodyRadius * .2);//create body random place
+        this.legs = [];  
+        this.createLegs(scene);
+        // tones for the
+    }
 
-//     createLegs(scene) {   
-//         const foot1 = scene.matter.add.circle(this.body.position.x + this.bodyRadius * Math.cos(30), this.body.position.y + this.bodyRadius * Math.sin(30), .1 * this.bodyRadius, { isStatic: true });     
-//         let leg1 = scene.matter.add.constraint(this.body, foot1); //create leg at 30 degrees from center, by using the code below
-//         // const leg2 //create leg at 90 degrees from center
+    createLegs(scene) {   
+        const foot1 = scene.matter.add.circle(this.body.position.x + this.bodyRadius * Math.cos(30), this.body.position.y + this.bodyRadius * Math.sin(30), .1 * this.bodyRadius, { isStatic: true });     
+        let leg1 = scene.matter.add.constraint(this.body, foot1); //create leg at 30 degrees from center, by using the code below
+        // const leg2 //create leg at 90 degrees from center
 
-//     }
-// }
+    }
+}
 
 export class Whirlygig { 
-    constructor(scene) {
+    constructor(scene, x, y) {
         if (!this.whirlies) {
             scene.whirlies = [];
         }
         this.bodyRadius = .02 * Math.max(scene.scale.width, scene.scale.height); //body radius fraction of longest canvas side
 
         //build components
-        this.pin = scene.matter.add.circle(Math.random() * scene.scale.width, Math.random() * scene.scale.height, .05 * this.bodyRadius, { isStatic: true });  
+        this.pin = scene.matter.add.circle(x, y, .05 * this.bodyRadius, { isStatic: true });  
         this.body = scene.matter.add.circle(this.pin.position.x + this.bodyRadius * 10 * Math.cos(45), this.pin.position.y + this.bodyRadius * Math.sin(45), this.bodyRadius, {friction: 0, frictionAir: 0, ignoreGravity: true });//create body random place. to make frictionless, add {friction: 0, frictionAir: 0}     
-        this.stalk = scene.matter.add.constraint(this.body, this.pin); //create leg at 150 degrees from center
+        this.stalk = scene.matter.add.constraint(this.body, this.pin, undefined, .9); //create leg at 150 degrees from center
 
         //make it move
         scene.matter.body.setVelocity(this.body, { x: (Math.random() * 10) + 5, y: (Math.random() * 10) + 5 });
@@ -101,27 +102,128 @@ export class Whirlygig2 {
 }
 
 export class PoofPuff { 
-    constructor(scene, number = 30, scale = 1 , x, y) {
-        if (!this.PoofPuffs) {
-            scene.PoofPuffs = [];
-        }
-        this.bodyRadius = scale * .02 * Math.max(scene.scale.width, scene.scale.height);
-        this.pin = scene.matter.add.circle(x, y, 0, { isStatic: true });  
-        this.poofStalks = [];
+    constructor(scene, config = {}) {
+        const {
+            name = "PoofPuff",
+            arrayName = "PoofPuffs",
+            number = 31,
+            x = Math.random() * scene.scale.width,
+            y = Math.random() * scene.scale.height,
+            pinStatic = true,
+            pinRadius = .1 * Math.min(scene.scale.width, scene.scale.height),
+            armLength = pinRadius * 3,
+            armStiffness = .3,
+            ballRadius = pinRadius * .3,
+            ballRadiusScaler = 1,
+            friction = 0,
+            frictionAir = 0,
+            ignoreGravity = false
+        } = config; 
 
-        for (let i = 0; i < number; i++) {
-            let body = scene.matter.add.circle(this.pin.position.x + this.bodyRadius * 10, this.pin.position.y + this.bodyRadius, this.bodyRadius, {friction: 0, frictionAir: 0, ignoreGravity: true });//create body random place. to make frictionless, add {friction: 0, frictionAir: 0}     
-            let stalk = scene.matter.add.constraint(body, this.pin, this.bodyRadius * 10, .05, { damping: 0.0001 }); //create leg at 150 degrees from center
-            scene.matter.body.setVelocity(body, { x: (Math.random() * 10) + 5, y: (Math.random() * 10) + 5 });
-            this.poofStalks.push({ body: body, stalk: stalk });
+        if (!scene[arrayName]) {//set arrayname to arrayName in config? how to set variable name to a string? by using bracket notation like this: scene[arrayName] = [], equivilent to 
+            scene[arrayName] = [];
         }
+
+        this.composite = scene.matter.composite.create();  
+
+        this.pin = scene.matter.add.circle(x, y, pinRadius, {friction: friction, frictionAir: frictionAir, isStatic: pinStatic, ignoreGravity: true});  
+        scene.matter.composite.add(this.composite, this.pin);
+
+        this.poofStalks = [];
+        for (let i = 0; i < number; i++) {
+           
+            ////create ball at random angle armLength away from pin. Reduces instantiation bugs
+            // Generate a random angle in radians
+            let angle = Math.random() * Math.PI * 2; // Random angle between 0 and 2*PI
+            // Convert polar coordinates (angle, armLength) to Cartesian coordinates (dx, dy)
+            let dx = Math.cos(angle) * armLength;
+            let dy = Math.sin(angle) * armLength;
+            // Calculate the position of the ball relative to the pin
+            let ballX = x + dx;
+            let ballY = y + dy;
+
+            // Create ball at the calculated position
+            let ball = scene.matter.add.circle(ballX, ballY, ballRadius * ballRadiusScaler, {
+                friction: 0,
+                frictionAir: 0,
+                ignoreGravity: true
+            });
+
+            //connect to pin
+            let constraint = scene.matter.add.constraint(this.pin, ball, armLength, armStiffness);
+            
+            scene.matter.composite.add(this.composite, [ball, constraint]);
+            this.poofStalks.push({ ball: ball, constraint: constraint });
+        }
+
+        //pointer down, everything contracts, just a little.
+        scene.input.on("pointerdown", (pointer) => {
+            if (scene.matter.containsPoint(this.pin, pointer.x, pointer.y)) {//
+                this.Contract(scene);
+            }});
+ 
+
+        scene.input.on("pointerup", (pointer) => {
+            if (scene.matter.containsPoint(this.pin, pointer.x, pointer.y)) {//
+                this.Release(scene);
+                this.Pulse(scene);
+            }});
+        
+         
+
+        scene.PoofPuffs.push(this.composite);
+        console.log(this.composite);
+
+       
+    }
+    
+    Contract(scene) {
+        console.log("CONTRACTING");
+        scene.matter.composite.allConstraints(this.composite).forEach((constraint) => {
+            constraint.length *= 8/9;
+            constraint.stiffness *= 2;
+        });
     }
 
-    //Future Iterations
+    Release(scene) {
+        console.log("RELEASING");
+        scene.matter.composite.allConstraints(this.composite).forEach((constraint) => {
+            constraint.length *= 9/8;
+            constraint.stiffness /= 2;
+        });
+    }
+
+    Pulse(scene) {
+        console.log("PULSING");
+        scene.matter.composite.allBodies(this.composite).forEach((body) => {
+            if (body !== this.pin) {
+                const direction = { 
+                    x: .5 * (body.position.x - this.pin.position.x), 
+                    y: .5 * (body.position.y - this.pin.position.y)
+                };
+                const velocity = scene.matter.body.getVelocity(body);//works better without this part but stops spin without it which feels weird. maybe do applyForce instead? hm. 
+                const newVelocity = {
+                    x: (velocity.x + direction.x),
+                    y: (velocity.y + direction.y)
+                };
+                scene.matter.body.setVelocity(body, newVelocity);
+            }
+        });
+    }
+
+        
+    //Future Ideas
+    //put contract and release into one method you can just put in constructor that contains the two pointer events itself? 
+    ////would be good but, what if i want to do only one? weigh options.
+    /////for all these kinds of things, should the pointer be in the thing itself? hmMmm, try it with pulse, then you can just
+    /////put the pulse method in the constructor and it will work, rather than having to put the pointer event in the constructor
+    /////is it more resource intensive to have more methods in one pointer, or more pointers in one method?
     // poofbodies can be tapped to explode/emitter/poof (and destroy stalk/constraint)
     // sound associated with poof tap, or general velocity of whole thing. spin velocity
     // 2 layers of radius
     //make scaleable from constructor argument 
+
+    
 
 }
 
