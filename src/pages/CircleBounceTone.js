@@ -23,6 +23,9 @@ class Example extends Phaser.Scene {
     }
 
     create() {
+        //right now tone only works after click. how do i auto-click to initiate without user interaction? by typing 
+        
+
         this.sprites = [];
 
         for (let i = 0; i < 60; i++) {
@@ -42,11 +45,24 @@ class Example extends Phaser.Scene {
 
     
         //make circle
-        this.circle = this.add.circle(400, 300, 50).setStrokeStyle(2, 0xffff00);
+        this.circle = this.add.circle(400, 300, 50).setStrokeStyle(2, 0xffff00).setActive(false).setVisible(false);
+        
+
+        this.input.on('pointerdown', (pointer) => {
+            this.circle.copyPosition(pointer);
+            this.circle.setActive(true);
+            this.circle.setVisible(true);
+
+        });
 
         this.input.on('pointermove', (pointer) => {
             this.circle.copyPosition(pointer); //circle move with pointer
-            Tone.start();
+            
+        });
+
+        this.input.on('pointerup', () => {
+            this.circle.setActive(false);
+            this.circle.setVisible(false);
         });
 
 

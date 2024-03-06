@@ -20,6 +20,7 @@ import { Tethered } from "../Tethered";
 import { BOING } from "../Boing/Boing";
 import { Counterpoint } from "../Counterpoint/Counterpoint";
 import { Species } from "../Species/Species";
+import { SoftTouch } from "../SoftTouch/SoftTouch";
 
 const paths = [
   { to: "/", element: <Home />, includeInNav: true, name: "Home" },
@@ -116,6 +117,13 @@ const paths = [
     includeInNav: false,
     name: "Species",
   },
+  {
+    to: "/SoftTouch",
+    element: <SoftTouch />,
+    includeInNav: false,
+    name: "SoftTouch",
+  },
+
 
 ];
 
