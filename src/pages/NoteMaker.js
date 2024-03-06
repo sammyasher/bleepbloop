@@ -3,11 +3,7 @@ import Phaser from "phaser";
 import * as Tone from "tone"; // 
 import { GameComponent } from "../components/GameComponent";
 
-
-const synth = new Tone.Synth().toDestination();
-console.log('synth created')
-const notes = ["C3", "G3", "A3", "C4", "D4", "E4", "F4", "G4", "A4", "B4"];
-var particles = null;
+//i should put this in the create function, by  changing
 
 class Example extends Phaser.Scene {
 
@@ -28,7 +24,12 @@ class Example extends Phaser.Scene {
   }
   
   create() {
-    particles = this.add.particles(0, 0, "blue", {
+
+    const synth = new Tone.Synth().toDestination();
+    console.log('synth created')
+    const notes = ["C3", "G3", "A3", "C4", "D4", "E4", "F4", "G4", "A4", "B4"];
+ 
+    this.particles = this.add.particles(0, 0, "blue", {
       //all attributes: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.GameObjects.Particles.ParticleEmitterConfig
       color: [ 0xadd8e6, 0xff0000 ],  //light pink in hex is 0xffc0cb
       speed: 600, //{ min: 0, max: 1000}, //  100 (circles/shapes painting) // 1 or 0 (static shapes)
@@ -58,14 +59,14 @@ class Example extends Phaser.Scene {
     });
     
     this.input.on("pointerdown", () => {
-      particles.emitting = true;
+      this.particles.emitting = true;
       console.log('emit back to true');
-      particles.startFollow(this.input.activePointer);
+      this.particles.startFollow(this.input.activePointer);
       
     });
 
     this.input.on("pointerup", () => {
-      particles.emitting = false;
+      this.particles.emitting = false;
       //particles.explode(10, pointer.x, pointer.y);
     });
   }
@@ -78,7 +79,7 @@ class Example extends Phaser.Scene {
       newfrequency = 10;
     }  
     
-    particles.frequency = newfrequency; 
+    this.particles.frequency = newfrequency; 
    
  
     //want color to change based on x axis position of poitner

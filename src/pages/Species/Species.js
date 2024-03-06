@@ -4,17 +4,18 @@ import { GameComponent } from "../../components/GameComponent";
 import * as Tone from "tone";
 import { click } from "@testing-library/user-event/dist/click";
 import { createTether, removeTether, createTethered } from "../../Utils/TetherUtils";
-import * as Make from "./Utils";//how to import all from Utils? by writing import 
+import * as Make from "./Utils";//how to import all from Utils? by writing import *
 
 
 class FerrisWheel extends Phaser.Scene {
     constructor(scene) {
-        super("FerrisWheel");
+        super("SoftTouch");
     }
 
 
     create() {
         ////PREPARE WORLD
+        
         this.matter.add.mouseSpring();
 
         //store canvas dimensions
@@ -120,10 +121,10 @@ export const Species = () => {
         width: "100%",
         height: "95%", //why does 100% make it below the fold?
         scene: [FerrisWheel, BeNotAfraid, FloatingFriendlies],
-        // scale: {
-        //   mode: Phaser.Scale.RESIZE,
-        //   autoCenter: Phaser.Scale.CENTER_BOTH,
-        // },
+        scale: {
+          mode: Phaser.Scale.RESIZE,
+          autoCenter: Phaser.Scale.CENTER_BOTH,
+        },
         physics: {
             default: "matter", //matter is a physics engine that comes with Phaser
             matter: {
