@@ -1,5 +1,4 @@
-
-  // Import all png images in the assets/particles directory
+ // Import all png images in the assets/particles directory
   const imagesContext = require.context('./assets', false, /\.png$/); // 
 
   // Convert imported images into an array or object

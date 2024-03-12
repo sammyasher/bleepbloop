@@ -58,7 +58,7 @@ const paths = [
   {
     to: "/circlebouncetone",
     element: <CircleBounceTone />,
-    includeInNav: false,
+    includeInNav: true,
     name: "CircleBounceTone",
   },
   { to: "/beanboy", element: <BeanBoy />, includeInNav: true, name: "BeanBoy" },
