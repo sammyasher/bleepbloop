@@ -9,6 +9,8 @@ import {
   removeTethersOnSpace,
 } from "./Utils";
 
+
+
 class Scene1 extends Phaser.Scene {
   constructor(scene) {
     super("Scene1");

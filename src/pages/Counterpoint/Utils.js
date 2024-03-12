@@ -3,7 +3,7 @@ import * as Tone from "tone";
 
 //defining feature: will have up to, but not more than 2 tethers at a time
 
-export const createCounterpointTether = (scene, x, y, pointer) => {
+export const createCounterpointTether = (scene, x, y, pointer) => {  
   const anchor = scene.anchor;
   console.log(pointer);
   let isCounterpoint = true;
@@ -22,7 +22,7 @@ export const createCounterpointTether = (scene, x, y, pointer) => {
   //   // scene.tethers.shift();
   // }
   scene.tethers.forEach((tether) => {
-    if (tether.isCounterpoint === isCounterpoint) {
+    if (tether.isCounterpoint === isCounterpoint) { 
       removeTether(scene, tether);
     }
   });
