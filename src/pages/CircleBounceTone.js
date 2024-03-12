@@ -53,7 +53,7 @@ class Example extends Phaser.Scene {
             envelope: {
                 attack: 0.05,
                  //random release up to .5 excluding 0 
-                release: Math.random() * 0.5 + 0.06
+                release: Math.random() * 0.6 + 0.06
 
             },
         
