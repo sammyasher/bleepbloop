@@ -35,38 +35,44 @@ class Example extends Phaser.Scene {
     preload() {
         this.load.image('mushroom', mushroom);
 
-        this.synth = new Tone.PolySynth(Tone.Synth).toDestination();  
+        this.synth = new Tone.PolySynth(Tone.Synth)
+
         this.synth.set({
             vibratoAmount: 0.5,
-            vibratoRate: 5, 
+            vibratoRate: 5,
         });
         //add slight phlange to synth
         this.phlanger = new Tone.Phaser({
             frequency: 2,
             octaves: 1,
             baseFrequency: 1000
-        }).toDestination();
-        this.synth.connect(this.phlanger);
+        })
+
+        //to set the wet/dry mix of the reverb, use a gain node which is connected to the reverb and then to the destination. so it would go synth -> phlanger -> gain -> reverb -> destination. but that would change how much phlange goes to reverb, i want to change how much phlange goes to the limiter. so i would do synth -> phlanger -> gain -> limiter -> reverb -> destination. so i would do this.synth.connect(this.phlanger);//
+        this.synth.connect(this.phlanger);// 
+        //set reverb with longer tail
+
+
+        this.gainNode = new Tone.Gain(.17);
+        this.phlanger.connect(this.gainNode);
+
+        this.reverb = new Tone.Reverb(4);
+        this.gainNode.connect(this.reverb);//to only send a certain amount of phlanger to reverb, add a gain node between the phlanger and reverb
+
+        this.limiter = new Tone.Limiter(-1).toDestination(); //  //threshold bet
+        this.reverb.connect(this.limiter);
 
         //make synth sound loong release, and add reverb
         this.synth.set({
             envelope: {
                 attack: 0.05,
-                 //random release up to .5 excluding 0 
+                //random release up to .5 excluding 0 
                 release: Math.random() * 0.6 + 0.06
 
             },
-        
-        });
-        this.reverb = new Tone.Reverb(0.5).toDestination();
-        this.synth.connect(this.reverb);  //set reverb with longer tail
-        this.reverb.set({
-            decay: 10
+
         });
 
-        //set reverb with longer tail
-        
-        
         this.pastbodiesInCircle = [];
 
     }
