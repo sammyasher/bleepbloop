@@ -81,10 +81,14 @@ class Example extends Phaser.Scene {
         //right now tone only works after click. how do i auto-click to initiate without user interaction? by typing 
         
 
+        this.width = this.scale.width;
+        this.height = this.scale.height;
+
+        this.numberOfShrooms = this.width/30; //divided by width of mushrooms
         this.sprites = [];
 
         //make bouncing rectangles
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < this.numberOfShrooms; i++) {
             const pos = Phaser.Geom.Rectangle.Random(this.physics.world.bounds); //return a random point within the canvas
 
             const body = this.physics.add.image(pos.x, pos.y, 'mushroom'); //add an image at that point
