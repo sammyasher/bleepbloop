@@ -114,13 +114,13 @@ const paths = [
   {
     to: "/Species",
     element: <Species />,
-    includeInNav: false,
+    includeInNav: true,
     name: "Species",
   },
   {
     to: "/SoftTouch",
     element: <SoftTouch />,
-    includeInNav: false,
+    includeInNav: true,
     name: "SoftTouch",
   },
 
