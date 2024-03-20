@@ -8,7 +8,7 @@ import { Samoji } from "../Samoji";
 import { SourceAndSink } from "../SourceAndSink";
 import { Route } from "react-router-dom";
 import { MultiFireWork } from "../MultiFireWork";
-import { CircleBounceTone } from "../CircleBounceTone";
+import { CircleBounceTone } from "../CircleBounceTone/CircleBounceTone";
 import { BeanBoy } from "../BeanBoy";
 import { GlowTone } from "../GlowTone";
 import { Glorp } from "../Glorp";

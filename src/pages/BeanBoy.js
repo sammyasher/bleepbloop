@@ -132,7 +132,7 @@ class Example extends Phaser.Scene {
         var crunchCount;
 
         const CreateCrunchies = () => {
-            const crunchAmount = 12;
+            const crunchAmount = 15;
             crunchCount = crunchAmount;
             for (let i = 0; i < crunchAmount; i++) {
                 const crunchy = this.crunchies.create(Phaser.Math.Between(0, this.scale.width), 0, "Crunchy").setScale(.2);
