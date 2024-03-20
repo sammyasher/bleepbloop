@@ -134,10 +134,10 @@ class Example extends Phaser.Scene {
 
     reassignNotes() {
         const chords = [
-            ["C3", "C4", "E4", "G4", "B4", "D5", "G5", "B5", "C5", "C6"],
+            ["C3", "C4", "E4", "G4", "B4", "D5", "G5", "B5", "C6"],
             ["F2", "F3", "C4", "A4"],
-            ["A2", "E3", "C4", "E5", "G5", "B5"],
-            ["G2", "D3", "G3", "B4", "D5", "F5", "A5"],
+            ["A2", "E3", "C5", "E5", "G5", "B5"],
+            ["G2", "D3", "F4", "B4", "E5", ""],
             
             // Add more chords as needed
         ];
